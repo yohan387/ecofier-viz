@@ -1,0 +1,157 @@
+<mxfile host="65bd71144e">
+    <diagram id="rYaVTgGl7ctqW1ajtvef" name="Page-1">
+        <mxGraphModel dx="1888" dy="1222" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="6" value="Ecofier Mobile" style="strokeColor=#dddddd;shadow=1;strokeWidth=1;rounded=1;absoluteArcSize=1;arcSize=2;labelPosition=center;verticalLabelPosition=middle;align=center;verticalAlign=bottom;spacingLeft=0;fontColor=#999999;fontSize=12;whiteSpace=wrap;spacingBottom=2;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="1410" y="720" width="150" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="" style="sketch=0;dashed=0;connectable=0;html=1;fillColor=#008a00;strokeColor=#005700;shape=mxgraph.gcp2.phone;part=1;fontColor=#ffffff;" vertex="1" parent="6">
+                    <mxGeometry x="0.5" width="32" height="50" relative="1" as="geometry">
+                        <mxPoint x="-16" y="10" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="44" value="" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.database;whiteSpace=wrap;" vertex="1" parent="6">
+                    <mxGeometry x="105" y="61" width="20" height="29" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="" style="group" vertex="1" connectable="0" parent="1">
+                    <mxGeometry x="670" y="140" width="290" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="" style="html=1;verticalLabelPosition=bottom;align=center;labelBackgroundColor=#ffffff;verticalAlign=top;strokeWidth=2;strokeColor=#0080F0;shadow=0;dashed=0;shape=mxgraph.ios7.icons.cloud;" vertex="1" parent="13">
+                    <mxGeometry width="290" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="Serveur distant" style="strokeColor=#6c8ebf;shadow=1;strokeWidth=1;rounded=1;absoluteArcSize=1;arcSize=2;labelPosition=center;verticalLabelPosition=middle;align=center;verticalAlign=bottom;spacingLeft=0;fontSize=12;whiteSpace=wrap;spacingBottom=2;html=1;fillColor=#dae8fc;" vertex="1" parent="13">
+                    <mxGeometry x="95" y="80" width="100" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="" style="sketch=0;dashed=0;connectable=0;html=1;fillColor=#0050ef;strokeColor=#001DBC;shape=mxgraph.gcp2.storage;part=1;fontColor=#ffffff;" vertex="1" parent="11">
+                    <mxGeometry x="0.5" width="50" height="40" relative="1" as="geometry">
+                        <mxPoint x="-25" y="15" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="21" value="" style="group" vertex="1" connectable="0" parent="1">
+                    <mxGeometry x="160" y="650" width="230" height="230" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="" style="rounded=1;arcSize=10;dashed=1;strokeColor=#F59D56;fillColor=none;gradientColor=none;dashPattern=8 4;strokeWidth=2;" vertex="1" parent="21">
+                    <mxGeometry width="230" height="230" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="Ecofier desktop" style="strokeColor=#dddddd;shadow=1;strokeWidth=1;rounded=1;absoluteArcSize=1;arcSize=2;labelPosition=center;verticalLabelPosition=middle;align=center;verticalAlign=bottom;spacingLeft=0;fontColor=#999999;fontSize=12;whiteSpace=wrap;spacingBottom=2;html=1;" vertex="1" parent="21">
+                    <mxGeometry x="30" y="9.5" width="160" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="" style="sketch=0;dashed=0;connectable=0;html=1;fillColor=#1ba1e2;strokeColor=#006EAF;shape=mxgraph.gcp2.desktop;part=1;fontColor=#ffffff;" vertex="1" parent="16">
+                    <mxGeometry x="0.5" width="50" height="45" relative="1" as="geometry">
+                        <mxPoint x="-25" y="12.5" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="18" value="BD LOCAL" style="strokeColor=#6c8ebf;shadow=1;strokeWidth=1;rounded=1;absoluteArcSize=1;arcSize=2;labelPosition=center;verticalLabelPosition=middle;align=center;verticalAlign=bottom;spacingLeft=0;fontSize=12;whiteSpace=wrap;spacingBottom=2;html=1;fillColor=#dae8fc;" vertex="1" parent="21">
+                    <mxGeometry x="70" y="127.5" width="80" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="" style="sketch=0;dashed=0;connectable=0;html=1;fillColor=#0050ef;strokeColor=#001DBC;shape=mxgraph.gcp2.storage;part=1;fontColor=#ffffff;" vertex="1" parent="18">
+                    <mxGeometry x="0.5" width="50" height="40" relative="1" as="geometry">
+                        <mxPoint x="-25" y="15" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="22" value="" style="group" vertex="1" connectable="0" parent="1">
+                    <mxGeometry x="500" y="650" width="230" height="230" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="" style="rounded=1;arcSize=10;dashed=1;strokeColor=#F59D56;fillColor=none;gradientColor=none;dashPattern=8 4;strokeWidth=2;" vertex="1" parent="22">
+                    <mxGeometry width="230" height="230" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="Ecofier desktop" style="strokeColor=#dddddd;shadow=1;strokeWidth=1;rounded=1;absoluteArcSize=1;arcSize=2;labelPosition=center;verticalLabelPosition=middle;align=center;verticalAlign=bottom;spacingLeft=0;fontColor=#999999;fontSize=12;whiteSpace=wrap;spacingBottom=2;html=1;" vertex="1" parent="22">
+                    <mxGeometry x="30" y="9.5" width="160" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="" style="sketch=0;dashed=0;connectable=0;html=1;fillColor=#1ba1e2;strokeColor=#006EAF;shape=mxgraph.gcp2.desktop;part=1;fontColor=#ffffff;" vertex="1" parent="24">
+                    <mxGeometry x="0.5" width="50" height="45" relative="1" as="geometry">
+                        <mxPoint x="-25" y="12.5" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="26" value="BD LOCAL" style="strokeColor=#6c8ebf;shadow=1;strokeWidth=1;rounded=1;absoluteArcSize=1;arcSize=2;labelPosition=center;verticalLabelPosition=middle;align=center;verticalAlign=bottom;spacingLeft=0;fontSize=12;whiteSpace=wrap;spacingBottom=2;html=1;fillColor=#dae8fc;" vertex="1" parent="22">
+                    <mxGeometry x="70" y="127.5" width="80" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="" style="sketch=0;dashed=0;connectable=0;html=1;fillColor=#0050ef;strokeColor=#001DBC;shape=mxgraph.gcp2.storage;part=1;fontColor=#ffffff;" vertex="1" parent="26">
+                    <mxGeometry x="0.5" width="50" height="40" relative="1" as="geometry">
+                        <mxPoint x="-25" y="15" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="28" value="" style="group" vertex="1" connectable="0" parent="1">
+                    <mxGeometry x="800" y="650" width="230" height="230" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="" style="rounded=1;arcSize=10;dashed=1;strokeColor=#F59D56;fillColor=none;gradientColor=none;dashPattern=8 4;strokeWidth=2;" vertex="1" parent="28">
+                    <mxGeometry width="230" height="230" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" value="Ecofier desktop" style="strokeColor=#dddddd;shadow=1;strokeWidth=1;rounded=1;absoluteArcSize=1;arcSize=2;labelPosition=center;verticalLabelPosition=middle;align=center;verticalAlign=bottom;spacingLeft=0;fontColor=#999999;fontSize=12;whiteSpace=wrap;spacingBottom=2;html=1;" vertex="1" parent="28">
+                    <mxGeometry x="30" y="9.5" width="160" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value="" style="sketch=0;dashed=0;connectable=0;html=1;fillColor=#1ba1e2;strokeColor=#006EAF;shape=mxgraph.gcp2.desktop;part=1;fontColor=#ffffff;" vertex="1" parent="30">
+                    <mxGeometry x="0.5" width="50" height="45" relative="1" as="geometry">
+                        <mxPoint x="-25" y="12.5" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="32" value="BD LOCAL" style="strokeColor=#6c8ebf;shadow=1;strokeWidth=1;rounded=1;absoluteArcSize=1;arcSize=2;labelPosition=center;verticalLabelPosition=middle;align=center;verticalAlign=bottom;spacingLeft=0;fontSize=12;whiteSpace=wrap;spacingBottom=2;html=1;fillColor=#dae8fc;" vertex="1" parent="28">
+                    <mxGeometry x="70" y="127.5" width="80" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="33" value="" style="sketch=0;dashed=0;connectable=0;html=1;fillColor=#0050ef;strokeColor=#001DBC;shape=mxgraph.gcp2.storage;part=1;fontColor=#ffffff;" vertex="1" parent="32">
+                    <mxGeometry x="0.5" width="50" height="40" relative="1" as="geometry">
+                        <mxPoint x="-25" y="15" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="34" value="" style="endArrow=classic;startArrow=classic;html=1;exitX=0.627;exitY=0.018;exitDx=0;exitDy=0;entryX=0.191;entryY=0.997;entryDx=0;entryDy=0;entryPerimeter=0;exitPerimeter=0;" edge="1" parent="1" source="15" target="10">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="560" y="580" as="sourcePoint"/>
+                        <mxPoint x="610" y="530" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="35" value="" style="endArrow=classic;startArrow=classic;html=1;exitX=0.296;exitY=0.004;exitDx=0;exitDy=0;entryX=0.382;entryY=1.002;entryDx=0;entryDy=0;entryPerimeter=0;exitPerimeter=0;" edge="1" parent="1" source="23" target="10">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="275" y="460" as="sourcePoint"/>
+                        <mxPoint x="696" y="306" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="36" value="" style="endArrow=classic;startArrow=classic;html=1;exitX=0.346;exitY=0.004;exitDx=0;exitDy=0;entryX=0.64;entryY=0.981;entryDx=0;entryDy=0;entryPerimeter=0;exitPerimeter=0;" edge="1" parent="1" source="29" target="10">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="575" y="460" as="sourcePoint"/>
+                        <mxPoint x="736" y="706" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="50" value="Ecofier Mobile" style="strokeColor=#dddddd;shadow=1;strokeWidth=1;rounded=1;absoluteArcSize=1;arcSize=2;labelPosition=center;verticalLabelPosition=middle;align=center;verticalAlign=bottom;spacingLeft=0;fontColor=#999999;fontSize=12;whiteSpace=wrap;spacingBottom=2;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="1410" y="520" width="150" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="51" value="" style="sketch=0;dashed=0;connectable=0;html=1;fillColor=#008a00;strokeColor=#005700;shape=mxgraph.gcp2.phone;part=1;fontColor=#ffffff;" vertex="1" parent="50">
+                    <mxGeometry x="0.5" width="32" height="50" relative="1" as="geometry">
+                        <mxPoint x="-16" y="10" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="52" value="" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.database;whiteSpace=wrap;" vertex="1" parent="50">
+                    <mxGeometry x="105" y="61" width="20" height="29" as="geometry"/>
+                </mxCell>
+                <mxCell id="54" value="" style="endArrow=classic;startArrow=classic;html=1;exitX=0;exitY=0;exitDx=0;exitDy=0;entryX=0.798;entryY=0.981;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="6" target="10">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="890" y="661" as="sourcePoint"/>
+                        <mxPoint x="816" y="466" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="55" value="" style="endArrow=classic;startArrow=classic;html=1;exitX=0.002;exitY=0.428;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.949;entryY=0.902;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="50" target="10">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="1300" y="730" as="sourcePoint"/>
+                        <mxPoint x="890" y="440" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="57" value="Client 1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+                    <mxGeometry x="260" y="900" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="60" value="Client 1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+                    <mxGeometry x="620" y="900" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="61" value="Client 2" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+                    <mxGeometry x="900" y="900" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="62" value="Client 2" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+                    <mxGeometry x="1600" y="550" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="63" value="Client 1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+                    <mxGeometry x="1600" y="740" width="30" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
