@@ -1,107 +1,122 @@
+import 'package:ecofier_viz/core/constants.dart';
 import 'package:flutter/material.dart';
 
-// Style commun pour tous les champs
-final _inputDecoration = InputDecoration(
-  border: OutlineInputBorder(
-    borderRadius: BorderRadius.circular(16),
-  ),
-  enabledBorder: OutlineInputBorder(
-    borderRadius: BorderRadius.circular(16),
-    borderSide: const BorderSide(color: Colors.grey),
-  ),
-  focusedBorder: OutlineInputBorder(
-    borderRadius: BorderRadius.circular(16),
-    borderSide: BorderSide(color: Colors.blue.shade700, width: 2),
-  ),
-  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-);
-
-class TextInput extends StatelessWidget {
-  final String label;
-  final TextEditingController? controller;
-  final String? Function(String?)? validator;
-  final bool enabled;
+class AppTextInput extends StatelessWidget {
+  final TextEditingController controller;
+  final String? labelText;
+  final String? description;
+  final String? initialValue;
+  final double width;
+  final Icon? prefixIcon;
+  final bool isReadOnly;
   final TextInputType? keyboardType;
+  final String? Function(String?)? validator;
   final void Function(String)? onChanged;
 
-  const TextInput({
+  const AppTextInput({
     super.key,
-    required this.label,
-    this.controller,
+    required this.controller,
+    required this.labelText,
+    this.description,
+    this.width = 256,
+    this.prefixIcon,
     this.validator,
-    this.enabled = true,
+    required this.isReadOnly,
+    this.initialValue,
+    this.onChanged,
     this.keyboardType,
-    this.onChanged,
   });
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      validator: validator,
-      enabled: enabled,
-      keyboardType: keyboardType,
-      onChanged: onChanged,
-      decoration: _inputDecoration.copyWith(labelText: label),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (description != null)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text(description!),
+          ),
+        SizedBox(
+          width: width,
+          child: TextFormField(
+            onChanged: onChanged,
+            initialValue: initialValue,
+            readOnly: isReadOnly,
+            controller: controller,
+            validator: validator,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            textInputAction: TextInputAction.next,
+            keyboardType: keyboardType,
+            decoration: const InputDecoration().copyWith(
+              prefixIcon: prefixIcon,
+              hintText: labelText,
+              labelText: labelText,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
 
-class PhoneInput extends StatelessWidget {
-  final String label;
-  final TextEditingController? controller;
-  final String? Function(String?)? validator;
-  final bool enabled;
-  final void Function(String)? onChanged;
+class AppPasswordInput extends StatefulWidget {
+  final TextEditingController controller;
+  final String? labelText;
+  final String? description;
+  final double width;
+  final String? Function(String?)? validatePassword;
 
-  const PhoneInput({
+  const AppPasswordInput({
     super.key,
-    this.label = 'Numéro de téléphone',
-    this.controller,
-    this.validator,
-    this.enabled = true,
-    this.onChanged,
+    required this.controller,
+    required this.labelText,
+    this.description,
+    this.width = 256,
+    this.validatePassword,
   });
 
   @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      validator: validator,
-      enabled: enabled,
-      keyboardType: TextInputType.phone,
-      onChanged: onChanged,
-      decoration: _inputDecoration.copyWith(labelText: label),
-    );
-  }
+  State<AppPasswordInput> createState() => _AppPasswordInputState();
 }
 
-class PasswordInput extends StatelessWidget {
-  final String label;
-  final TextEditingController? controller;
-  final String? Function(String?)? validator;
-  final bool enabled;
-  final void Function(String)? onChanged;
-
-  const PasswordInput({
-    super.key,
-    this.label = 'Mot de passe',
-    this.controller,
-    this.validator,
-    this.enabled = true,
-    this.onChanged,
-  });
-
+class _AppPasswordInputState extends State<AppPasswordInput> {
+  bool _obscureText = true;
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      validator: validator,
-      enabled: enabled,
-      obscureText: true,
-      keyboardType: TextInputType.text,
-      onChanged: onChanged,
-      decoration: _inputDecoration.copyWith(labelText: label),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (widget.description != null)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text(widget.description!),
+          ),
+        SizedBox(
+          width: widget.width,
+          child: TextFormField(
+            controller: widget.controller,
+            obscureText: _obscureText,
+            validator: widget.validatePassword,
+            textInputAction: TextInputAction.done,
+            decoration: const InputDecoration().copyWith(
+              prefixIcon: AppIcons.lock,
+              suffixIcon: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _obscureText = !_obscureText;
+                  });
+                },
+                child: _obscureText ? AppIcons.closedEye : AppIcons.openedEye,
+              ),
+              hintText: widget.labelText,
+              labelText: widget.labelText,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

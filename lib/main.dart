@@ -1,3 +1,4 @@
+import 'package:ecofier_viz/core/theme.dart';
 import 'package:ecofier_viz/features/authentication/presentation/screens/auth_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -10,9 +11,10 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: AuthScreen(),
+      theme: AppTheme.lightTheme,
+      home: const AuthScreen(),
     );
   }
 }

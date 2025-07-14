@@ -1,8 +1,18 @@
+import 'package:ecofier_viz/core/constants.dart';
+import 'package:ecofier_viz/core/widgets/buttons.dart';
 import 'package:ecofier_viz/features/authentication/presentation/widgets/inputs.dart';
 import 'package:flutter/material.dart';
 
-class AuthScreen extends StatelessWidget {
+class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
+
+  @override
+  State<AuthScreen> createState() => _AuthScreenState();
+}
+
+class _AuthScreenState extends State<AuthScreen> {
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -50,27 +60,33 @@ class AuthScreen extends StatelessWidget {
                 children: [
                   const SizedBox(height: 32),
                   // Champ numéro de téléphone
-                  const PhoneInput(),
+                  AppTextInput(
+                    isReadOnly: false,
+                    controller: _usernameController,
+                    labelText: "Matricule",
+                    // description: "Veuillez saisir votre matricule",
+                    width: 284,
+                    prefixIcon: AppIcons.avatar,
+                    validator: (p0) {},
+                  ),
                   const SizedBox(height: 16),
-                  // Champ mot de passe
-                  const PasswordInput(),
+                  AppPasswordInput(
+                    controller: _passwordController,
+                    labelText: "Mot de passe",
+                    // description: "Veuillez saisir votre mot de passe",
+                    width: 284,
+                    validatePassword: (p0) {},
+                  ),
                   const SizedBox(height: 24),
                   // Bouton de validation
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: const Text('Valider'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(
-                          255, 30, 95, 33), // background color
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(44), // custom shape
-                      ),
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 50, vertical: 20), // custom padding
-                      textStyle: TextStyle(
-                        fontSize: 20, // text size
-                      ),
+                  AppButton(
+                    width: 284,
+                    title: "Connexion",
+                    icon: const Icon(
+                      Icons.done,
+                      color: Colors.white,
                     ),
+                    onTap: () {},
                   ),
 
                   // Texte bas de page
@@ -78,16 +94,12 @@ class AuthScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text("J'ai déjà un compte ? "),
-                      GestureDetector(
-                        onTap: () {
-                          // Action pour créer un compte
-                        },
-                        child: Text(
+                      TextButton(
+                        onPressed: () {},
+                        child: const Text(
                           'Créer un compte',
                           style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.underline,
+                            color: AppColors.green1,
                           ),
                         ),
                       ),
