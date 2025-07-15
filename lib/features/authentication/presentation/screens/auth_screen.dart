@@ -1,6 +1,5 @@
-import 'package:ecofier_viz/core/constants.dart';
-import 'package:ecofier_viz/core/widgets/buttons.dart';
-import 'package:ecofier_viz/features/authentication/presentation/widgets/inputs.dart';
+import 'package:ecofier_viz/features/authentication/presentation/widgets/login_widget.dart';
+import 'package:ecofier_viz/features/authentication/presentation/widgets/sign_in_widget.dart';
 import 'package:flutter/material.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -11,8 +10,13 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
+  bool isLogin = true;
+
+  void setIsLogin(bool value) {
+    setState(() {
+      isLogin = value;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,11 +44,11 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                     ),
                   ),
-                  const Align(
+                  Align(
                     alignment: Alignment.center,
                     child: Text(
-                      'Connexion',
-                      style: TextStyle(
+                      isLogin ? 'Connexion' : 'Créer un compte',
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -54,61 +58,9 @@ class _AuthScreenState extends State<AuthScreen> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                children: [
-                  const SizedBox(height: 32),
-                  // Champ numéro de téléphone
-                  AppTextInput(
-                    isReadOnly: false,
-                    controller: _usernameController,
-                    labelText: "Matricule",
-                    // description: "Veuillez saisir votre matricule",
-                    width: 284,
-                    prefixIcon: AppIcons.avatar,
-                    validator: (p0) {},
-                  ),
-                  const SizedBox(height: 16),
-                  AppPasswordInput(
-                    controller: _passwordController,
-                    labelText: "Mot de passe",
-                    // description: "Veuillez saisir votre mot de passe",
-                    width: 284,
-                    validatePassword: (p0) {},
-                  ),
-                  const SizedBox(height: 24),
-                  // Bouton de validation
-                  AppButton(
-                    width: 284,
-                    title: "Connexion",
-                    icon: const Icon(
-                      Icons.done,
-                      color: Colors.white,
-                    ),
-                    onTap: () {},
-                  ),
-
-                  // Texte bas de page
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text("J'ai déjà un compte ? "),
-                      TextButton(
-                        onPressed: () {},
-                        child: const Text(
-                          'Créer un compte',
-                          style: TextStyle(
-                            color: AppColors.green1,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                ],
-              ),
-            ),
+            isLogin
+                ? LoginWidget(setIsLogin: setIsLogin)
+                : SignInWidget(setIsLogin: setIsLogin),
           ],
         ),
       ),

@@ -3,16 +3,17 @@ import 'package:ecofier_viz/core/widgets/buttons.dart';
 import 'package:ecofier_viz/features/authentication/presentation/widgets/inputs.dart';
 import 'package:flutter/material.dart';
 
-class LoginWidget extends StatefulWidget {
+class SignInWidget extends StatefulWidget {
   final void Function(bool) setIsLogin;
-  const LoginWidget({super.key, required this.setIsLogin});
+  const SignInWidget({super.key, required this.setIsLogin});
 
   @override
-  State<LoginWidget> createState() => _LoginWidgetState();
+  State<SignInWidget> createState() => _SignInWidgetState();
 }
 
-class _LoginWidgetState extends State<LoginWidget> {
+class _SignInWidgetState extends State<SignInWidget> {
   final _usernameController = TextEditingController();
+  final _phoneNumberController = TextEditingController();
   final _passwordController = TextEditingController();
 
   @override
@@ -26,17 +27,27 @@ class _LoginWidgetState extends State<LoginWidget> {
           AppTextInput(
             isReadOnly: false,
             controller: _usernameController,
-            labelText: "Matricule",
-            // description: "Veuillez saisir votre matricule",
+            labelText: "Nom et prénoms",
+            description: "Veuillez saisir votre nom et prénoms",
             width: 284,
             prefixIcon: AppIcons.avatar,
+            validator: (p0) {},
+          ),
+          const SizedBox(height: 16),
+          AppTextInput(
+            isReadOnly: false,
+            controller: _phoneNumberController,
+            labelText: "Téléphone",
+            description: "Veuillez saisir votre téléphone",
+            width: 284,
+            prefixIcon: AppIcons.phone,
             validator: (p0) {},
           ),
           const SizedBox(height: 16),
           AppPasswordInput(
             controller: _passwordController,
             labelText: "Mot de passe",
-            // description: "Veuillez saisir votre mot de passe",
+            description: "Veuillez définir votre mot de passe",
             width: 284,
             validatePassword: (p0) {},
           ),
@@ -44,7 +55,7 @@ class _LoginWidgetState extends State<LoginWidget> {
           // Bouton de validation
           AppButton(
             width: 284,
-            title: "Connexion",
+            title: "Créer mon compte",
             icon: const Icon(
               Icons.done,
               color: Colors.white,
@@ -56,13 +67,13 @@ class _LoginWidgetState extends State<LoginWidget> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text("Pas de compte ? "),
+              const Text("J'ai déjà un compte,"),
               TextButton(
                 onPressed: () {
-                  widget.setIsLogin(false);
+                  widget.setIsLogin(true);
                 },
                 child: const Text(
-                  'Créer un compte',
+                  'Me connecter',
                   style: TextStyle(
                     color: AppColors.green1,
                   ),

@@ -1,5 +1,5 @@
 import 'package:ecofier_viz/core/theme.dart';
-import 'package:ecofier_viz/features/authentication/presentation/screens/auth_screen.dart';
+import 'package:ecofier_viz/features/visualization/presentation/home_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -14,7 +14,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      home: const AuthScreen(),
+      home: const HomeScreen(),
     );
   }
 }
