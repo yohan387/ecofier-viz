@@ -1,5 +1,6 @@
 import 'package:ecofier_viz/core/constants.dart';
 import 'package:ecofier_viz/features/visualization/presentation/widgets/app_options_selector.dart';
+import 'package:ecofier_viz/features/visualization/presentation/widgets/weighing_summary_item.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -71,8 +72,8 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(16),
+            const Padding(
+              padding: EdgeInsets.all(16),
               child: Text(
                 "Pesées",
                 style: TextStyle(
@@ -85,6 +86,86 @@ class HomeScreen extends StatelessWidget {
             AppOptionSelector(
               dataList: optionsList,
               value: (value) {},
+            ),
+            const SizedBox(height: 16),
+            Container(
+              margin: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color.fromARGB(255, 230, 237, 231)
+                        .withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: const Offset(0, 3), // changes position of shadow
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      "Pesées",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: AppColors.green2,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  GridView.builder(
+                    padding: const EdgeInsets.all(0),
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 3 / 2,
+                    ),
+                    itemCount: 4,
+                    itemBuilder: (context, index) {
+                      return const WeighingSummaryItem();
+                    },
+                  ),
+                ],
+              ),
+            ),
+
+            // Create history
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      "Historique",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: AppColors.green2,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  ListView.builder(
+                    padding: EdgeInsets.all(0),
+                    itemCount: 5,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text("Item $index"),
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           ],
         ),

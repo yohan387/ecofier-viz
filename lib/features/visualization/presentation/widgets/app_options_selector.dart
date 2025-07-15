@@ -60,12 +60,11 @@ class _AppOptionSelectorState extends State<AppOptionSelector> {
                   height: 34,
                   width: widget.width,
                   decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.green3),
+                    border: Border.all(color: AppColors.grey3),
                     borderRadius: BorderRadius.circular(
                       16,
                     ),
-                    color:
-                        selectedID == id ? AppColors.green4 : AppColors.white,
+                    color: selectedID == id ? AppColors.grey4 : AppColors.white,
                   ),
                   child: Text(
                     overflow: TextOverflow.ellipsis,
