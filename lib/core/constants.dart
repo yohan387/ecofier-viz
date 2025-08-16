@@ -22,3 +22,27 @@ class AppIcons {
   static const openedEye = Icon(Icons.visibility_off, color: AppColors.green1);
   static const phone = Icon(Icons.phone, color: AppColors.green1);
 }
+
+class AppErrorStatusCode {
+  static const int api = 1000;
+  static const int localStorage = 2000;
+  static const int network = 3000;
+  static const int internal = 4000;
+  static const int socket = 6000;
+  static const int invalideToken = 6000;
+}
+
+/// Types de Failure possibles
+enum FailureType {
+  api,
+  localStorage,
+  internal,
+  network,
+}
+
+enum AppExceptionType {
+  api,
+  localStorage,
+  network,
+  internal,
+}
