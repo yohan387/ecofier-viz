@@ -1,5 +1,5 @@
 import 'package:ecofier_viz/core/theme.dart';
-import 'package:ecofier_viz/features/visualization/presentation/home_screen.dart';
+import 'package:ecofier_viz/presentation/visualisation/home_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {

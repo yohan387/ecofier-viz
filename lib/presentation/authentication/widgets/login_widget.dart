@@ -1,6 +1,6 @@
 import 'package:ecofier_viz/core/constants.dart';
 import 'package:ecofier_viz/core/widgets/buttons.dart';
-import 'package:ecofier_viz/features/authentication/presentation/widgets/inputs.dart';
+import 'package:ecofier_viz/presentation/authentication/widgets/inputs.dart';
 import 'package:flutter/material.dart';
 
 class LoginWidget extends StatefulWidget {

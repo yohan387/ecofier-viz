@@ -1,6 +1,6 @@
 import 'package:ecofier_viz/core/constants.dart';
-import 'package:ecofier_viz/features/visualization/presentation/widgets/app_options_selector.dart';
-import 'package:ecofier_viz/features/visualization/presentation/widgets/weighing_summary_item.dart';
+import 'package:ecofier_viz/presentation/visualisation/widgets/app_options_selector.dart';
+import 'package:ecofier_viz/presentation/visualisation/widgets/weighing_summary_item.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
