@@ -1,7 +1,9 @@
 import 'package:ecofier_viz/core/constants.dart';
 import 'package:ecofier_viz/core/widgets/buttons.dart';
+import 'package:ecofier_viz/presentation/authentication/state/login_cubit/login_cubit.dart';
 import 'package:ecofier_viz/presentation/authentication/widgets/inputs.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginWidget extends StatefulWidget {
   final void Function(bool) setIsLogin;
@@ -49,7 +51,12 @@ class _LoginWidgetState extends State<LoginWidget> {
               Icons.done,
               color: Colors.white,
             ),
-            onTap: () {},
+            onTap: () {
+              context.read<LoginCubit>().login(
+                    _usernameController.text,
+                    _passwordController.text,
+                  );
+            },
           ),
 
           // Texte bas de page
