@@ -13,7 +13,7 @@ class GetWeighingListCubit extends Cubit<GetWeighingListState> {
   GetWeighingListCubit(this._repository)
       : super(const GetWeighingListInitial());
 
-  Future<void> fetchWeighingList() async {
+  Future<void> getWeighingList() async {
     emit(const GetWeighingListLoading());
     try {
       final list = await _repository.getWeighingList();

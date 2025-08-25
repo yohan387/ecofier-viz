@@ -14,7 +14,7 @@ class GetWeighingSummaryCubit extends Cubit<GetWeighingSummaryState> {
   GetWeighingSummaryCubit(this._repository)
       : super(const GetWeighingSummaryInitial());
 
-  Future<void> fetchWeighingSummary() async {
+  Future<void> getWeighingSummary() async {
     emit(const GetWeighingSummaryLoading());
     try {
       final summary = await _repository.getWeighingSummary();

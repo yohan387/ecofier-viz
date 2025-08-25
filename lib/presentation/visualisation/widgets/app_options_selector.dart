@@ -64,7 +64,7 @@ class _AppOptionSelectorState extends State<AppOptionSelector> {
                     borderRadius: BorderRadius.circular(
                       16,
                     ),
-                    color: selectedID == id ? AppColors.grey4 : AppColors.white,
+                    color: selectedID == id ? AppColors.grey3 : AppColors.white,
                   ),
                   child: Text(
                     overflow: TextOverflow.ellipsis,
