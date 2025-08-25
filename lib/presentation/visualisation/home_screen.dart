@@ -3,9 +3,14 @@ import 'package:ecofier_viz/presentation/visualisation/widgets/app_options_selec
 import 'package:ecofier_viz/presentation/visualisation/widgets/weighing_summary_item.dart';
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     var optionsList = [

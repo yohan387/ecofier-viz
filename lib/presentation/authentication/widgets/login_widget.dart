@@ -2,6 +2,7 @@ import 'package:ecofier_viz/core/constants.dart';
 import 'package:ecofier_viz/core/widgets/buttons.dart';
 import 'package:ecofier_viz/presentation/authentication/state/login_cubit/login_cubit.dart';
 import 'package:ecofier_viz/presentation/authentication/widgets/inputs.dart';
+import 'package:ecofier_viz/presentation/visualisation/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -43,19 +44,38 @@ class _LoginWidgetState extends State<LoginWidget> {
             validatePassword: (p0) {},
           ),
           const SizedBox(height: 24),
-          // Bouton de validation
-          AppButton(
-            width: 284,
-            title: "Connexion",
-            icon: const Icon(
-              Icons.done,
-              color: Colors.white,
-            ),
-            onTap: () {
-              context.read<LoginCubit>().login(
-                    _usernameController.text,
-                    _passwordController.text,
+
+          BlocBuilder<LoginCubit, LoginState>(
+            builder: (context, state) {
+              return AppButton(
+                width: 284,
+                title: "Connexion",
+                icon: state is LoginLoading
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: const CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
+                      )
+                    : const Icon(
+                        Icons.done,
+                        color: Colors.white,
+                      ),
+                onTap: () {
+                  if (state is LoginLoading) return;
+                  context.read<LoginCubit>().login(
+                        _usernameController.text,
+                        _passwordController.text,
+                      );
+
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                    (Route<dynamic> route) => false,
                   );
+                },
+              );
             },
           ),
 
