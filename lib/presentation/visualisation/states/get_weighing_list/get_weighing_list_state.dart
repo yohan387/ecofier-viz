@@ -16,12 +16,12 @@ final class GetWeighingListLoading extends GetWeighingListState {
 }
 
 final class GetWeighingListSuccess extends GetWeighingListState {
-  final List<Weighing> summaries;
+  final List<Weighing> weighings;
 
-  const GetWeighingListSuccess(this.summaries);
+  const GetWeighingListSuccess(this.weighings);
 
   @override
-  List<Object> get props => [summaries];
+  List<Object> get props => [weighings];
 }
 
 final class GetWeighingListFailure extends GetWeighingListState {

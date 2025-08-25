@@ -3,6 +3,8 @@ import 'package:ecofier_viz/presentation/authentication/state/login_cubit/login_
 import 'package:ecofier_viz/presentation/visualisation/states/get_weighing_list/get_weighing_list_cubit.dart';
 import 'package:ecofier_viz/presentation/visualisation/states/get_weighing_summary/get_weighing_summary_cubit.dart';
 import 'package:ecofier_viz/presentation/visualisation/widgets/app_options_selector.dart';
+import 'package:ecofier_viz/presentation/visualisation/widgets/weighing_list.dart';
+import 'package:ecofier_viz/presentation/visualisation/widgets/weighing_summary.dart';
 import 'package:ecofier_viz/presentation/visualisation/widgets/weighing_summary_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -72,135 +74,23 @@ class _HomeScreenState extends State<HomeScreen> {
                 value: (value) {},
               ),
               const SizedBox(height: 16),
-              _buildWeighingSummary(),
 
-              // Create history
-              _buildWeighingList(),
+              const WeighingSummary(),
+
+              const WeighingList(),
+
+              const Center(
+                child: Text("By Ecofier",
+                    style: TextStyle(
+                      color: AppColors.green1,
+                      fontStyle: FontStyle.italic,
+                    )),
+              ),
+
+              const SizedBox(height: 32),
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Padding _buildWeighingList() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              "Historique",
-              style: TextStyle(
-                fontSize: 18,
-                color: AppColors.green2,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          ListView.builder(
-            padding: const EdgeInsets.all(0),
-            itemCount: 5,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text("Item $index"),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Container _buildWeighingSummary() {
-    return Container(
-      margin: const EdgeInsets.all(4),
-      padding: const EdgeInsets.all(4),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              "Résumé",
-              style: TextStyle(
-                fontSize: 18,
-                color: AppColors.green2,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          BlocBuilder<GetWeighingSummaryCubit, GetWeighingSummaryState>(
-            builder: (context, state) {
-              if (state is GetWeighingSummaryLoading) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (state is GetWeighingSummarySuccess) {
-                final summary = state.summary;
-                return GridView(
-                  padding: const EdgeInsets.all(0),
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 3 / 2,
-                  ),
-                  children: [
-                    WeighingSummaryItem(
-                      title: "Poids net",
-                      value: summary.totalWeight.toString(),
-                      icon: Image.asset(
-                        'lib/core/assets/weight-scale.png',
-                        fit: BoxFit.cover,
-                        width: 32,
-                        height: 32,
-                        errorBuilder: (context, error, stackTrace) => Container(
-                          color: Colors.grey[300],
-                          child:
-                              const Center(child: Icon(Icons.image, size: 80)),
-                        ),
-                      ),
-                    ),
-                    WeighingSummaryItem(
-                        title: "Revenu",
-                        value: summary.totalItems.toString(),
-                        icon: Image.asset(
-                          'lib/core/assets/low-income.png',
-                          fit: BoxFit.cover,
-                          width: 32,
-                          height: 32,
-                          errorBuilder: (context, error, stackTrace) =>
-                              Container(
-                            color: Colors.grey[300],
-                            child: const Center(
-                                child: Icon(Icons.image, size: 80)),
-                          ),
-                        )),
-                    WeighingSummaryItem(
-                      title: "Anomalies",
-                      value: summary.lastUpdated.toString(),
-                      icon: Image.asset(
-                        'lib/core/assets/alert.png',
-                        fit: BoxFit.cover,
-                        width: 32,
-                        height: 32,
-                        errorBuilder: (context, error, stackTrace) => Container(
-                          color: Colors.grey[300],
-                          child:
-                              const Center(child: Icon(Icons.image, size: 80)),
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              }
-              return const SizedBox.shrink();
-            },
-          ),
-        ],
       ),
     );
   }
