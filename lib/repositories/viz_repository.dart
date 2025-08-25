@@ -18,8 +18,8 @@ class VizRepository {
     // Implementation to fetch the summary of weighings
     // This is a placeholder for the actual implementation
     return WeighingSummary(
-      totalWeight: 0.0,
-      totalItems: 0,
+      totalWeight: 259,
+      totalItems: 5,
       lastUpdated: DateTime.now(),
     );
   }

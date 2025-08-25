@@ -45,33 +45,39 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Bannière image
-            _buildBanner(),
-            const Padding(
-              padding: EdgeInsets.all(16),
-              child: Text(
-                "Pesées",
-                style: TextStyle(
-                  fontSize: 24,
-                  color: AppColors.green2,
-                  fontWeight: FontWeight.bold,
+      body: RefreshIndicator(
+        onRefresh: () async {
+          context.read<GetWeighingSummaryCubit>().getWeighingSummary();
+          context.read<GetWeighingListCubit>().getWeighingList();
+        },
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Bannière image
+              _buildBanner(),
+              const Padding(
+                padding: EdgeInsets.all(16),
+                child: Text(
+                  "Pesées",
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: AppColors.green2,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-            AppOptionSelector(
-              dataList: _filtersOptionList,
-              value: (value) {},
-            ),
-            const SizedBox(height: 16),
-            _buildWeighingSummary(),
+              AppOptionSelector(
+                dataList: _filtersOptionList,
+                value: (value) {},
+              ),
+              const SizedBox(height: 16),
+              _buildWeighingSummary(),
 
-            // Create history
-            _buildWeighingList(),
-          ],
+              // Create history
+              _buildWeighingList(),
+            ],
+          ),
         ),
       ),
     );
@@ -120,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              "Pesées",
+              "Résumé",
               style: TextStyle(
                 fontSize: 18,
                 color: AppColors.green2,
