@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:ecofier_viz/core/mixins/base_repo_mixin.dart';
-import 'package:ecofier_viz/core/connection_checker.dart';
+import 'package:ecofier_viz/core/mixins/repositories_mixin.dart';
+import 'package:ecofier_viz/core/utils/connection_checker.dart';
 import 'package:ecofier_viz/core/constants.dart';
 import 'package:ecofier_viz/core/dependencies_injection.dart';
 import 'package:ecofier_viz/core/errors/exceptions.dart';
@@ -10,7 +10,7 @@ import 'package:ecofier_viz/models/user.dart';
 import 'package:ecofier_viz/core/mixins/rest_api_mixin.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AuthRepository with ApiMixin, BaseRepoMixin {
+class AuthRepository with RestApiMixin, RepositoriesMixin {
   final IConnectionChecker _connectionChecker;
 
   AuthRepository({required IConnectionChecker connectionChecker})

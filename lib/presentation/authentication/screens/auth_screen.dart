@@ -1,4 +1,4 @@
-import 'package:ecofier_viz/core/utils.dart';
+import 'package:ecofier_viz/core/utils/screen_size.dart';
 import 'package:ecofier_viz/presentation/authentication/widgets/login_widget.dart';
 import 'package:ecofier_viz/presentation/authentication/widgets/register_client_widget.dart';
 import 'package:flutter/material.dart';

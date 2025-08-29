@@ -1,14 +1,14 @@
 import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
-import 'package:ecofier_viz/core/connection_checker.dart';
+import 'package:ecofier_viz/core/utils/connection_checker.dart';
 import 'package:ecofier_viz/core/constants.dart';
 import 'package:ecofier_viz/core/errors/exceptions.dart';
 import 'package:ecofier_viz/core/errors/failures.dart';
 import 'package:ecofier_viz/core/typedefs.dart';
 import 'package:flutter/foundation.dart';
 
-mixin BaseRepoMixin {
+mixin RepositoriesMixin {
   static const int maxTransactionCheckingRetries = 10;
   ResultFuture<T> _execute<T>({
     required Future<T> Function() action,

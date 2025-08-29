@@ -1,5 +1,5 @@
 import 'package:ecofier_viz/core/constants.dart';
-import 'package:ecofier_viz/core/utils.dart';
+import 'package:ecofier_viz/core/utils/validators.dart';
 import 'package:ecofier_viz/core/widgets/buttons.dart';
 import 'package:ecofier_viz/presentation/authentication/state/register_client/register_client_cubit.dart';
 import 'package:ecofier_viz/presentation/authentication/widgets/inputs.dart';

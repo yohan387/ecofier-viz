@@ -9,7 +9,7 @@ import 'package:ecofier_viz/core/errors/exceptions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
-mixin ApiMixin {
+mixin RestApiMixin {
   final http.Client _httpClient = sl<http.Client>();
 
   Future<T> sendRequest<T>({
