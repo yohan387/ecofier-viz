@@ -1,52 +1,88 @@
 import 'dart:convert';
 
+import 'package:ecofier_viz/core/mixins/base_repo_mixin.dart';
+import 'package:ecofier_viz/core/connection_checker.dart';
 import 'package:ecofier_viz/core/constants.dart';
 import 'package:ecofier_viz/core/dependencies_injection.dart';
+import 'package:ecofier_viz/core/errors/exceptions.dart';
+import 'package:ecofier_viz/core/typedefs.dart';
 import 'package:ecofier_viz/models/user.dart';
-import 'package:ecofier_viz/core/base_services_mixin/rest_api_mixin.dart';
+import 'package:ecofier_viz/core/mixins/rest_api_mixin.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AuthRepository with ApiMixin {
-  Future<void> registerClient({
+class AuthRepository with ApiMixin, BaseRepoMixin {
+  final IConnectionChecker _connectionChecker;
+
+  AuthRepository({required IConnectionChecker connectionChecker})
+      : _connectionChecker = connectionChecker;
+
+  ResultFuture<void> registerClient({
     required String firstname,
     required String lastname,
     required String phoneNumber,
     required String password,
   }) async {
-    return sendRequest(
-      method: ApiMethod.post,
-      url: "$apiBaseUrl/register-client",
-      body: {
-        "nom": firstname,
-        "prenoms": lastname,
-        "telephone": phoneNumber,
-        "mot_de_passe_en_clair": password
-      },
-      responseHandler: (_) {
-        return;
+    return executeWithConnectionCheck(
+      _connectionChecker,
+      () {
+        return sendRequest(
+          method: ApiMethod.post,
+          url: "$apiBaseUrl/register-client",
+          body: {
+            "nom": firstname,
+            "prenoms": lastname,
+            "telephone": phoneNumber,
+            "mot_de_passe_en_clair": password
+          },
+          responseHandler: (_) {
+            return;
+          },
+        );
       },
     );
   }
 
-  Future<User> login(String phoneNumber, String password) async {
-    final logedUser = await sendRequest(
-      method: ApiMethod.post,
-      url: "$apiBaseUrl/login-client",
-      body: {
-        "telephone": phoneNumber,
-        "mot_de_passe_en_clair": password,
-      },
-      responseHandler: (response) {
-        final jsonMap = json.decode(utf8.decode(response));
-        return User.fromMap(jsonMap);
+  ResultFuture<User> login(String phoneNumber, String password) async {
+    return executeWithConnectionCheck(
+      _connectionChecker,
+      () async {
+        final logedUser = await sendRequest(
+          method: ApiMethod.post,
+          url: "$apiBaseUrl/login-client",
+          body: {
+            "telephone": phoneNumber,
+            "mot_de_passe_en_clair": password,
+          },
+          responseHandler: (response) {
+            final jsonMap = json.decode(utf8.decode(response));
+            return User.fromMap(jsonMap);
+          },
+        );
+
+        final prefs = sl<SharedPreferences>();
+
+        await prefs.setString('user', json.encode(logedUser.toMap()));
+
+        return logedUser;
       },
     );
+  }
 
-    final prefs = sl<SharedPreferences>();
-
-    await prefs.setString('user', json.encode(logedUser.toMap()));
-
-    return logedUser;
+  ResultFuture<User> getLocalUser() async {
+    return executeWithFailureHandling(
+      () async {
+        final prefs = sl<SharedPreferences>();
+        final userString = prefs.getString('user');
+        if (userString != null) {
+          final jsonMap = json.decode(userString);
+          return User.fromMap(jsonMap);
+        }
+        throw AppException.localStorage(
+          userMessage: "Utilisateur non trouvé.",
+          howToResolveError: "Veuillez vous connecter.",
+        );
+      },
+    );
   }
 
   Future<void> logout() async {

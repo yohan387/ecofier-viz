@@ -26,7 +26,8 @@ class _LoginWidgetState extends State<LoginWidget> {
       listener: (context, state) {
         if (state is LoginSuccess) {
           Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => const HomeScreen()),
+            MaterialPageRoute(
+                builder: (context) => HomeScreen(user: state.user)),
             (Route<dynamic> route) => false,
           );
         } else if (state is LoginFailure) {

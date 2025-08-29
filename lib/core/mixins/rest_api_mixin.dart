@@ -63,9 +63,17 @@ mixin ApiMixin {
 
         if (response.statusCode == 200 || response.statusCode == 201) {
           return responseHandler(response.bodyBytes);
-        } else if (response.statusCode == 400 ||
-            response.statusCode == 401 ||
-            response.statusCode == 403) {
+        } else if (response.statusCode == 401) {
+          final Map<String, dynamic> body =
+              json.decode(utf8.decode(response.bodyBytes));
+          throw AppException.api(
+            statusCode: AppErrorStatusCode.api,
+            userMessage: body['detail'] ?? "Non autorisé.",
+            description: response.body.toString(),
+            howToResolveError:
+                "Veuillez vous déconnecter et vous reconnecter à nouveau. Si le problème persiste, veuillez contacter le service client.",
+          );
+        } else if (response.statusCode == 400 || response.statusCode == 403) {
           throw AppException.api(
             statusCode: AppErrorStatusCode.invalideToken,
             userMessage: "Accès non autorisé.",

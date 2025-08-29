@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:ecofier_viz/core/connection_checker.dart';
+import 'package:ecofier_viz/presentation/authentication/state/get_local_user/get_local_user_cubit.dart';
 import 'package:ecofier_viz/presentation/authentication/state/login_cubit/login_cubit.dart';
 import 'package:ecofier_viz/presentation/authentication/state/logout_cubit/logout_cubit.dart';
 import 'package:ecofier_viz/presentation/authentication/state/register_client/register_client_cubit.dart';
@@ -22,9 +23,11 @@ Future<void> initDependencies() async {
 Future<void> _registerAuthDependencies() async {
   sl
     // Repositories
-    ..registerFactory(() => AuthRepository())
+    ..registerFactory(
+        () => AuthRepository(connectionChecker: sl<IConnectionChecker>()))
 
     // Cubits
+    ..registerFactory(() => GetLocalUserCubit(sl()))
     ..registerFactory(() => RegisterClientCubit(sl()))
     ..registerFactory(() => LoginCubit(sl()))
     ..registerFactory(() => LogoutCubit(sl()));

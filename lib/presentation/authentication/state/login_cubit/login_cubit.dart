@@ -1,6 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:ecofier_viz/core/constants.dart';
-import 'package:ecofier_viz/core/errors/exceptions.dart';
 import 'package:ecofier_viz/core/errors/failures.dart';
 import 'package:ecofier_viz/models/user.dart';
 import 'package:ecofier_viz/repositories/auth_repository.dart';
@@ -14,27 +12,10 @@ class LoginCubit extends Cubit<LoginState> {
 
   Future<void> login(String phoneNumber, String password) async {
     emit(const LoginLoading());
-    try {
-      final user = await _authRepository.login(phoneNumber, password);
-      emit(LoginSuccess(user));
-    } catch (error) {
-      if (error is Failure) {
-        emit(LoginFailure(error));
-      } else {
-        emit(
-          LoginFailure(
-            Failure.internal(
-              AppException.internal(
-                statusCode: AppErrorStatusCode.internal,
-                description: error.toString(),
-                userMessage: "Erreur inattendue lors de la connexion.",
-                howToResolveError:
-                    'Veuillez réessayer plus tard. Si le problème persiste, contactez le support.',
-              ),
-            ),
-          ),
-        );
-      }
-    }
+    final result = await _authRepository.login(phoneNumber, password);
+    result.fold(
+      (failure) => emit(LoginFailure(failure)),
+      (user) => emit(LoginSuccess(user)),
+    );
   }
 }
