@@ -17,88 +17,119 @@ class LoginWidget extends StatefulWidget {
 class _LoginWidgetState extends State<LoginWidget> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
-        children: [
-          const SizedBox(height: 32),
-          // Champ numéro de téléphone
-          AppTextInput(
-            isReadOnly: false,
-            controller: _usernameController,
-            labelText: "Matricule",
-            // description: "Veuillez saisir votre matricule",
-            width: 284,
-            prefixIcon: AppIcons.avatar,
-            validator: (p0) {},
-          ),
-          const SizedBox(height: 16),
-          AppPasswordInput(
-            controller: _passwordController,
-            labelText: "Mot de passe",
-            // description: "Veuillez saisir votre mot de passe",
-            width: 284,
-            validatePassword: (p0) {},
-          ),
-          const SizedBox(height: 24),
-
-          BlocBuilder<LoginCubit, LoginState>(
-            builder: (context, state) {
-              return AppButton(
-                width: 284,
-                title: "Connexion",
-                icon: state is LoginLoading
-                    ? const SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: const CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 2,
-                        ),
-                      )
-                    : const Icon(
-                        Icons.done,
-                        color: Colors.white,
-                      ),
-                onTap: () {
-                  if (state is LoginLoading) return;
-                  context.read<LoginCubit>().login(
-                        _usernameController.text,
-                        _passwordController.text,
-                      );
-
-                  Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) => const HomeScreen()),
-                    (Route<dynamic> route) => false,
-                  );
-                },
-              );
-            },
-          ),
-
-          // Texte bas de page
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+    return BlocListener<LoginCubit, LoginState>(
+      listener: (context, state) {
+        if (state is LoginSuccess) {
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
+            (Route<dynamic> route) => false,
+          );
+        } else if (state is LoginFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.failure.userMessage)),
+          );
+        }
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Form(
+          key: _formKey,
+          child: Column(
             children: [
-              const Text("Pas de compte ? "),
-              TextButton(
-                onPressed: () {
-                  widget.setIsLogin(false);
-                },
-                child: const Text(
-                  'Créer un compte',
-                  style: TextStyle(
-                    color: AppColors.green1,
+              const SizedBox(height: 32),
+              AppTextInput(
+                isReadOnly: false,
+                controller: _usernameController,
+                labelText: "Numéro de téléphone",
+                width: 284,
+                maxLength: 10,
+                prefixIcon: const SizedBox(
+                  width: 48,
+                  height: 48,
+                  child: Center(
+                    child: Text(
+                      "🇨🇮",
+                      style: TextStyle(fontSize: 18),
+                    ),
                   ),
                 ),
+                keyboardType: TextInputType.phone,
+                validator: (p0) {
+                  if (p0 == null || p0.isEmpty) {
+                    return 'Le numéro de téléphone est requis';
+                  }
+
+                  if (p0.length != 10) {
+                    return '10 chiffres max';
+                  }
+                  return null;
+                },
               ),
+              const SizedBox(height: 16),
+              AppPasswordInput(
+                controller: _passwordController,
+                labelText: "Mot de passe",
+                width: 284,
+              ),
+              const SizedBox(height: 24),
+
+              BlocBuilder<LoginCubit, LoginState>(
+                builder: (context, state) {
+                  return AppButton(
+                    width: 284,
+                    title: "Connexion",
+                    icon: state is LoginLoading
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: const CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : const Icon(
+                            Icons.done,
+                            color: Colors.white,
+                          ),
+                    onTap: () {
+                      if (state is LoginLoading) return;
+                      if (_formKey.currentState?.validate() ?? false) {
+                        context.read<LoginCubit>().login(
+                              _usernameController.text,
+                              _passwordController.text,
+                            );
+                      }
+                    },
+                  );
+                },
+              ),
+
+              // Texte bas de page
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Pas de compte ? "),
+                  TextButton(
+                    onPressed: () {
+                      widget.setIsLogin(false);
+                    },
+                    child: const Text(
+                      'Créer un compte',
+                      style: TextStyle(
+                        color: AppColors.green1,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
             ],
           ),
-          const SizedBox(height: 16),
-        ],
+        ),
       ),
     );
   }

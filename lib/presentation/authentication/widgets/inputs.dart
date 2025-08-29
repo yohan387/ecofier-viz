@@ -7,8 +7,9 @@ class AppTextInput extends StatelessWidget {
   final String? description;
   final String? initialValue;
   final double width;
-  final Icon? prefixIcon;
+  final Widget? prefixIcon;
   final bool isReadOnly;
+  final int? maxLength;
   final TextInputType? keyboardType;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
@@ -22,6 +23,7 @@ class AppTextInput extends StatelessWidget {
     this.prefixIcon,
     this.validator,
     required this.isReadOnly,
+    this.maxLength,
     this.initialValue,
     this.onChanged,
     this.keyboardType,
@@ -46,6 +48,7 @@ class AppTextInput extends StatelessWidget {
             readOnly: isReadOnly,
             controller: controller,
             validator: validator,
+            maxLength: maxLength,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             textInputAction: TextInputAction.next,
             keyboardType: keyboardType,
@@ -53,6 +56,7 @@ class AppTextInput extends StatelessWidget {
               prefixIcon: prefixIcon,
               hintText: labelText,
               labelText: labelText,
+              counter: const SizedBox.shrink(),
             ),
           ),
         ),
@@ -97,9 +101,23 @@ class _AppPasswordInputState extends State<AppPasswordInput> {
         SizedBox(
           width: widget.width,
           child: TextFormField(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             controller: widget.controller,
             obscureText: _obscureText,
-            validator: widget.validatePassword,
+            validator: (value) {
+              if (widget.validatePassword != null) {
+                return widget.validatePassword!(value);
+              } else {
+                if (value == null || value.isEmpty) {
+                  return 'Le mot de passe est requis';
+                }
+
+                if (value.length < 4) {
+                  return '4 caractères minimum';
+                }
+              }
+              return null;
+            },
             textInputAction: TextInputAction.done,
             decoration: const InputDecoration().copyWith(
               prefixIcon: AppIcons.lock,
