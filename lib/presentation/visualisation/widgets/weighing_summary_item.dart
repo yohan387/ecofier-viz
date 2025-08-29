@@ -1,6 +1,7 @@
 import 'package:ecofier_viz/core/constants.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class WeighingSummaryItem extends StatefulWidget {
   final String title;
@@ -73,6 +74,7 @@ class _WeighingSummaryItemState extends State<WeighingSummaryItem> {
                         ),
                   GestureDetector(
                     onTap: () {
+                      HapticFeedback.lightImpact();
                       setState(() {
                         _hideValue = !_hideValue;
                       });

@@ -68,7 +68,10 @@ class WeighingSummary extends StatelessWidget {
                     ),
                     WeighingSummaryItem(
                         title: "Revenu",
-                        value: AmountDisplay(amount: summary.totalEarned),
+                        value: AmountDisplay(
+                          amount: summary.totalEarned,
+                          textSize: 12,
+                        ),
                         icon: Image.asset(
                           'lib/core/assets/low-income.png',
                           fit: BoxFit.cover,
