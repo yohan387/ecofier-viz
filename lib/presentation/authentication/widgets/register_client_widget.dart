@@ -44,7 +44,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                 return null;
               },
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
             AppTextInput(
               isReadOnly: false,
               controller: _lastNameController,
@@ -58,7 +58,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                 return null;
               },
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
             AppTextInput(
               isReadOnly: false,
               controller: _phoneNumberController,
@@ -67,13 +67,13 @@ class _SignInWidgetState extends State<SignInWidget> {
               prefixIcon: AppIcons.phone,
               validator: phoneNumberValidator,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
             AppPasswordInput(
               controller: _passwordController,
               labelText: "Mot de passe",
               width: 284,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
             // Bouton de validation
             BlocBuilder<RegisterClientCubit, RegisterClientState>(
               builder: (context, state) {
@@ -99,7 +99,7 @@ class _SignInWidgetState extends State<SignInWidget> {
               },
             ),
 
-            // Texte bas de page
+            const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

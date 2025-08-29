@@ -1,3 +1,4 @@
+import 'package:ecofier_viz/core/utils.dart';
 import 'package:ecofier_viz/presentation/authentication/widgets/login_widget.dart';
 import 'package:ecofier_viz/presentation/authentication/widgets/register_client_widget.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,7 @@ class _AuthScreenState extends State<AuthScreen> {
           children: [
             // Bannière image
             SizedBox(
-              height: 256,
+              height: ScreenUtil.height(context) * 0.46,
               child: Stack(
                 children: [
                   ClipRRect(

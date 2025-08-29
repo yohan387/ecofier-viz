@@ -61,14 +61,13 @@ class _LoginWidgetState extends State<LoginWidget> {
                 keyboardType: TextInputType.phone,
                 validator: phoneNumberValidator,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 8),
               AppPasswordInput(
                 controller: _passwordController,
                 labelText: "Mot de passe",
                 width: 284,
               ),
-              const SizedBox(height: 24),
-
+              const SizedBox(height: 16),
               BlocBuilder<LoginCubit, LoginState>(
                 builder: (context, state) {
                   return AppButton(
@@ -99,8 +98,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                   );
                 },
               ),
-
-              // Texte bas de page
+              const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
