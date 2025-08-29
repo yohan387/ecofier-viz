@@ -2,9 +2,9 @@ import 'package:ecofier_viz/core/constants.dart';
 
 import 'package:flutter/material.dart';
 
-class WeighingSummaryItem extends StatelessWidget {
+class WeighingSummaryItem extends StatefulWidget {
   final String title;
-  final String value;
+  final Widget value;
   final Widget icon;
   const WeighingSummaryItem({
     super.key,
@@ -13,6 +13,12 @@ class WeighingSummaryItem extends StatelessWidget {
     required this.icon,
   });
 
+  @override
+  State<WeighingSummaryItem> createState() => _WeighingSummaryItemState();
+}
+
+class _WeighingSummaryItemState extends State<WeighingSummaryItem> {
+  bool _hideValue = true;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -35,10 +41,10 @@ class WeighingSummaryItem extends StatelessWidget {
         children: [
           Column(
             children: [
-              icon,
+              widget.icon,
               const SizedBox(width: 8),
               Text(
-                title,
+                widget.title,
                 style:
                     const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
               ),
@@ -55,16 +61,24 @@ class WeighingSummaryItem extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
-                    child: Text(
-                      textAlign: TextAlign.center,
-                      value,
-                      maxLines: 1,
-                      style: const TextStyle(
-                          fontSize: 14, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  AppIcons.openedEye,
+                  _hideValue
+                      ? const Text(
+                          "••••••••",
+                          style: TextStyle(
+                              color: AppColors.green1,
+                              fontWeight: FontWeight.bold),
+                        )
+                      : Expanded(
+                          child: widget.value,
+                        ),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _hideValue = !_hideValue;
+                      });
+                    },
+                    child: _hideValue ? AppIcons.closedEye : AppIcons.openedEye,
+                  )
                 ],
               ),
             ),

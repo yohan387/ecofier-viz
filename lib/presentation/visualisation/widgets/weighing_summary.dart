@@ -1,4 +1,6 @@
 import 'package:ecofier_viz/core/constants.dart';
+import 'package:ecofier_viz/core/extensions.dart';
+import 'package:ecofier_viz/core/widgets/amount_display.dart';
 import 'package:ecofier_viz/presentation/visualisation/states/get_weighing_summary/get_weighing_summary_cubit.dart';
 import 'package:ecofier_viz/presentation/visualisation/widgets/weighing_summary_item.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +47,13 @@ class WeighingSummary extends StatelessWidget {
                   children: [
                     WeighingSummaryItem(
                       title: "Poids net",
-                      value: summary.totalWeight.toString(),
+                      value: Text(
+                        textAlign: TextAlign.center,
+                        summary.totalWeight.formatAsAmount(),
+                        maxLines: 1,
+                        style: const TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.bold),
+                      ),
                       icon: Image.asset(
                         'lib/core/assets/weight-scale.png',
                         fit: BoxFit.cover,
@@ -60,7 +68,7 @@ class WeighingSummary extends StatelessWidget {
                     ),
                     WeighingSummaryItem(
                         title: "Revenu",
-                        value: summary.totalItems.toString(),
+                        value: AmountDisplay(amount: summary.totalEarned),
                         icon: Image.asset(
                           'lib/core/assets/low-income.png',
                           fit: BoxFit.cover,
@@ -75,7 +83,13 @@ class WeighingSummary extends StatelessWidget {
                         )),
                     WeighingSummaryItem(
                       title: "Anomalies",
-                      value: summary.lastUpdated.toString(),
+                      value: Text(
+                        textAlign: TextAlign.center,
+                        summary.totalAnomalies.toString(),
+                        maxLines: 1,
+                        style: const TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.bold),
+                      ),
                       icon: Image.asset(
                         'lib/core/assets/alert.png',
                         fit: BoxFit.cover,

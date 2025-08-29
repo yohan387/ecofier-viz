@@ -1,6 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:ecofier_viz/core/constants.dart';
-import 'package:ecofier_viz/core/errors/exceptions.dart';
 import 'package:ecofier_viz/core/errors/failures.dart';
 import 'package:ecofier_viz/models/weighing.dart';
 import 'package:ecofier_viz/repositories/viz_repository.dart';
@@ -15,24 +13,11 @@ class GetWeighingListCubit extends Cubit<GetWeighingListState> {
 
   Future<void> getWeighingList() async {
     emit(const GetWeighingListLoading());
-    try {
-      final list = await _repository.getWeighingList();
-      emit(GetWeighingListSuccess(list));
-    } catch (e) {
-      emit(
-        GetWeighingListFailure(
-          Failure.internal(
-            AppException.internal(
-              statusCode: AppErrorStatusCode.internal,
-              description: e.toString(),
-              userMessage:
-                  "Erreur inattendue lors de la récupération de la liste de pesée.",
-              howToResolveError:
-                  'Veuillez réessayer plus tard. Si le problème persiste, contactez le support.',
-            ),
-          ),
-        ),
-      );
-    }
+    final result = await _repository.getWeighingList();
+
+    result.fold(
+      (failure) => emit(GetWeighingListFailure(failure)),
+      (weighingList) => emit(GetWeighingListSuccess(weighingList)),
+    );
   }
 }

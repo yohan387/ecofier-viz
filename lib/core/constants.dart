@@ -50,3 +50,22 @@ enum AppExceptionType {
   network,
   internal,
 }
+
+const filtersOptionList = [
+  {
+    "id": "1",
+    "code": "D'aujourd'hui",
+  },
+  {
+    "id": "2",
+    "code": "De la semaine",
+  },
+  {
+    "id": "3",
+    "code": "Du mois",
+  },
+  {
+    "id": "4",
+    "code": "Autre",
+  },
+];

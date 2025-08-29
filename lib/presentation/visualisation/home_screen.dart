@@ -1,5 +1,7 @@
 import 'package:ecofier_viz/core/constants.dart';
 import 'package:ecofier_viz/models/user.dart';
+import 'package:ecofier_viz/presentation/authentication/screens/auth_screen.dart';
+import 'package:ecofier_viz/presentation/authentication/state/logout_cubit/logout_cubit.dart';
 import 'package:ecofier_viz/presentation/visualisation/states/get_weighing_list/get_weighing_list_cubit.dart';
 import 'package:ecofier_viz/presentation/visualisation/states/get_weighing_summary/get_weighing_summary_cubit.dart';
 import 'package:ecofier_viz/presentation/visualisation/widgets/app_options_selector.dart';
@@ -21,74 +23,91 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    context.read<GetWeighingSummaryCubit>().getWeighingSummary();
     context.read<GetWeighingListCubit>().getWeighingList();
   }
-
-  static const _filtersOptionList = [
-    {
-      "id": "1",
-      "code": "D'aujourd'hui",
-    },
-    {
-      "id": "2",
-      "code": "De la semaine",
-    },
-    {
-      "id": "3",
-      "code": "Du mois",
-    },
-    {
-      "id": "4",
-      "code": "Autre",
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () async {
-          context.read<GetWeighingSummaryCubit>().getWeighingSummary();
           context.read<GetWeighingListCubit>().getWeighingList();
         },
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Bannière image
-              _buildBanner(),
-              const Padding(
-                padding: EdgeInsets.all(16),
-                child: Text(
-                  "Pesées",
-                  style: TextStyle(
-                    fontSize: 24,
-                    color: AppColors.green2,
-                    fontWeight: FontWeight.bold,
+        child: MultiBlocListener(
+          listeners: [
+            BlocListener<GetWeighingListCubit, GetWeighingListState>(
+              listener: (context, state) {
+                if (state is GetWeighingListSuccess) {
+                  context.read<GetWeighingSummaryCubit>().getWeighingSummary();
+                } else if (state is GetWeighingListFailure) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(state.failure.userMessage)),
+                  );
+                }
+              },
+            ),
+            BlocListener<GetWeighingSummaryCubit, GetWeighingSummaryState>(
+              listener: (context, state) {
+                if (state is GetWeighingSummaryFailure) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(state.failure.userMessage)),
+                  );
+                }
+              },
+            ),
+            BlocListener<LogoutCubit, LogoutState>(
+              listener: (context, state) {
+                if (state is LogoutSuccess) {
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => const AuthScreen()),
+                    (Route<dynamic> route) => false,
+                  );
+                } else if (state is LogoutFailure) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(state.failure.userMessage)),
+                  );
+                }
+              },
+            ),
+          ],
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Bannière image
+                _buildBanner(),
+                const Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Text(
+                    "Pesées",
+                    style: TextStyle(
+                      fontSize: 24,
+                      color: AppColors.green2,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-              AppOptionSelector(
-                dataList: _filtersOptionList,
-                value: (value) {},
-              ),
-              const SizedBox(height: 16),
+                AppOptionSelector(
+                  dataList: filtersOptionList,
+                  value: (value) {},
+                ),
+                const SizedBox(height: 16),
 
-              const WeighingSummary(),
+                const WeighingSummary(),
 
-              const WeighingList(),
+                const WeighingList(),
 
-              const Center(
-                child: Text("By Ecofier",
-                    style: TextStyle(
-                      color: AppColors.green1,
-                      fontStyle: FontStyle.italic,
-                    )),
-              ),
+                const Center(
+                  child: Text("By Ecofier",
+                      style: TextStyle(
+                        color: AppColors.green1,
+                        fontStyle: FontStyle.italic,
+                      )),
+                ),
 
-              const SizedBox(height: 32),
-            ],
+                const SizedBox(height: 32),
+              ],
+            ),
           ),
         ),
       ),
@@ -174,8 +193,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         IconButton(
                           color: AppColors.white,
-                          onPressed: () {},
-                          icon: const Icon(Icons.menu),
+                          onPressed: () {
+                            context.read<LogoutCubit>().logout();
+                          },
+                          icon: const Icon(Icons.logout),
                         ),
                       ],
                     ),

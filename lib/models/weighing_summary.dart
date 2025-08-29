@@ -2,11 +2,15 @@ import 'package:equatable/equatable.dart';
 
 class WeighingSummary extends Equatable {
   final double totalWeight;
+  final double totalEarned;
+  final int totalAnomalies;
   final int totalItems;
   final DateTime lastUpdated;
 
   const WeighingSummary({
     required this.totalWeight,
+    required this.totalEarned,
+    required this.totalAnomalies,
     required this.totalItems,
     required this.lastUpdated,
   });
@@ -17,5 +21,6 @@ class WeighingSummary extends Equatable {
   }
 
   @override
-  List<Object?> get props => [totalWeight, totalItems, lastUpdated];
+  List<Object?> get props =>
+      [totalWeight, totalEarned, totalAnomalies, totalItems, lastUpdated];
 }

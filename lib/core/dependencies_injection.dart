@@ -23,7 +23,7 @@ Future<void> initDependencies() async {
 Future<void> _registerAuthDependencies() async {
   sl
     // Repositories
-    ..registerFactory(
+    ..registerLazySingleton(
         () => AuthRepository(connectionChecker: sl<IConnectionChecker>()))
 
     // Cubits
@@ -35,7 +35,8 @@ Future<void> _registerAuthDependencies() async {
 
 Future<void> _registerVisDependencies() async {
   sl
-    ..registerFactory(() => VizRepository())
+    ..registerLazySingleton(
+        () => VizRepository(connectionChecker: sl<IConnectionChecker>()))
 
     // Cubit
     ..registerFactory(() => GetWeighingListCubit(sl()))

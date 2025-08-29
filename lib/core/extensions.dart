@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 extension CapitalizeExtension on String {
   String capitalizeFirstLetters() {
     return split(' ')
@@ -26,5 +28,17 @@ extension CapitalizeExtension on String {
       return '${words[0][0]}${words[1][0]}'.toUpperCase();
     }
     return this[0].toUpperCase();
+  }
+}
+
+extension Format on double {
+  /// Formate un double directement (ex: 1000.5 → "1 000,5")
+  String formatAsAmount() {
+    return NumberFormat.decimalPattern('fr').format(this);
+  }
+
+  String formatAsWeight() {
+    final value = NumberFormat.decimalPattern('fr').format(this);
+    return "$value kg";
   }
 }

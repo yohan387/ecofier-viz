@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthRepository with RestApiMixin, RepositoriesMixin {
   final IConnectionChecker _connectionChecker;
+  final prefs = sl<SharedPreferences>();
 
   AuthRepository({required IConnectionChecker connectionChecker})
       : _connectionChecker = connectionChecker;
@@ -59,8 +60,6 @@ class AuthRepository with RestApiMixin, RepositoriesMixin {
           },
         );
 
-        final prefs = sl<SharedPreferences>();
-
         await prefs.setString('user', json.encode(logedUser.toMap()));
 
         return logedUser;
@@ -71,7 +70,6 @@ class AuthRepository with RestApiMixin, RepositoriesMixin {
   ResultFuture<User> getLocalUser() async {
     return executeWithFailureHandling(
       () async {
-        final prefs = sl<SharedPreferences>();
         final userString = prefs.getString('user');
         if (userString != null) {
           final jsonMap = json.decode(userString);
@@ -85,7 +83,11 @@ class AuthRepository with RestApiMixin, RepositoriesMixin {
     );
   }
 
-  Future<void> logout() async {
-    return Future.delayed(const Duration(seconds: 1));
+  ResultFuture<void> logout() async {
+    return executeWithFailureHandling(
+      () async {
+        await prefs.remove('user');
+      },
+    );
   }
 }
