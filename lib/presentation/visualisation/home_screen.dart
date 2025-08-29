@@ -5,7 +5,6 @@ import 'package:ecofier_viz/presentation/visualisation/states/get_weighing_summa
 import 'package:ecofier_viz/presentation/visualisation/widgets/app_options_selector.dart';
 import 'package:ecofier_viz/presentation/visualisation/widgets/weighing_list.dart';
 import 'package:ecofier_viz/presentation/visualisation/widgets/weighing_summary.dart';
-import 'package:ecofier_viz/presentation/visualisation/widgets/weighing_summary_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -158,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             builder: (context, state) {
                               if (state is LoginSuccess) {
                                 return Text(
-                                  state.user.username,
+                                  state.user.fullName,
                                   style: const TextStyle(
                                     color: AppColors.white,
                                     fontSize: 20,

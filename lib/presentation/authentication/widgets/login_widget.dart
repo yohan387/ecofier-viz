@@ -1,4 +1,5 @@
 import 'package:ecofier_viz/core/constants.dart';
+import 'package:ecofier_viz/core/utils.dart';
 import 'package:ecofier_viz/core/widgets/buttons.dart';
 import 'package:ecofier_viz/presentation/authentication/state/login_cubit/login_cubit.dart';
 import 'package:ecofier_viz/presentation/authentication/widgets/inputs.dart';
@@ -58,16 +59,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                   ),
                 ),
                 keyboardType: TextInputType.phone,
-                validator: (p0) {
-                  if (p0 == null || p0.isEmpty) {
-                    return 'Le numéro de téléphone est requis';
-                  }
-
-                  if (p0.length != 10) {
-                    return '10 chiffres max';
-                  }
-                  return null;
-                },
+                validator: phoneNumberValidator,
               ),
               const SizedBox(height: 16),
               AppPasswordInput(
@@ -86,7 +78,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                         ? const SizedBox(
                             width: 16,
                             height: 16,
-                            child: const CircularProgressIndicator(
+                            child: CircularProgressIndicator(
                               color: Colors.white,
                               strokeWidth: 2,
                             ),

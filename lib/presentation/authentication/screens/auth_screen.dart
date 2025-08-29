@@ -1,5 +1,5 @@
 import 'package:ecofier_viz/presentation/authentication/widgets/login_widget.dart';
-import 'package:ecofier_viz/presentation/authentication/widgets/sign_in_widget.dart';
+import 'package:ecofier_viz/presentation/authentication/widgets/register_client_widget.dart';
 import 'package:flutter/material.dart';
 
 class AuthScreen extends StatefulWidget {

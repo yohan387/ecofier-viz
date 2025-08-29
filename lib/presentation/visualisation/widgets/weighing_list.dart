@@ -3,7 +3,6 @@ import 'package:ecofier_viz/presentation/visualisation/states/get_weighing_list/
 import 'package:ecofier_viz/presentation/visualisation/widgets/weighing_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/adapters.dart';
 
 class WeighingList extends StatelessWidget {
   const WeighingList({
