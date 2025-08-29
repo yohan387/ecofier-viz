@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+enum ApiMethod { get, post, put, delete, unknown }
+
+const String apiBaseUrl = "http://127.0.0.1:8000/";
+
 class AppColors {
   static const Color black = Colors.black;
   static const Color green1 = Color(0xFF0A400A);

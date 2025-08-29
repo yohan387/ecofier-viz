@@ -8,9 +8,8 @@ import 'package:ecofier_viz/presentation/visualisation/states/get_weighing_summa
 import 'package:ecofier_viz/repositories/auth_repository.dart';
 import 'package:ecofier_viz/repositories/viz_repository.dart';
 import 'package:get_it/get_it.dart';
-import 'package:hive_flutter/adapters.dart';
 import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final sl = GetIt.instance;
 
@@ -41,16 +40,12 @@ Future<void> _registerVisDependencies() async {
 }
 
 Future<void> _initExternalLibraries() async {
-  final dir = await getApplicationDocumentsDirectory();
-  await Hive.initFlutter(dir.path);
-
-  final weighingBox = await Hive.openBox<String>('weighingBox');
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
 
   sl
     ..registerLazySingleton<http.Client>(() => http.Client())
     ..registerFactory(() => Connectivity())
     ..registerFactory<IConnectionChecker>(
         () => ConnectionChecker(sl<Connectivity>()))
-    ..registerLazySingleton<Box<String>>(() => weighingBox,
-        instanceName: 'weighingBox');
+    ..registerLazySingleton<SharedPreferences>(() => prefs);
 }
