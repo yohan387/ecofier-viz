@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 enum ApiMethod { get, post, put, delete, unknown }
 
-const String apiBaseUrl = "http://192.168.88.15:8000";
+const String apiBaseUrl = "https://ecofier-backend.onrender.com";
 
 class AppColors {
   static const Color black = Colors.black;

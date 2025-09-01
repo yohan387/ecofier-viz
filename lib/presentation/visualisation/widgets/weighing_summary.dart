@@ -49,7 +49,7 @@ class WeighingSummary extends StatelessWidget {
                       title: "Poids net",
                       value: Text(
                         textAlign: TextAlign.center,
-                        summary.totalWeight.formatAsAmount(),
+                        '${summary.totalWeight.formatAsAmount()} Kg',
                         maxLines: 1,
                         style: const TextStyle(
                             fontSize: 14, fontWeight: FontWeight.bold),
