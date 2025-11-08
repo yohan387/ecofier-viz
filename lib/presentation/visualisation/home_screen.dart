@@ -87,9 +87,28 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-                AppOptionSelector(
-                  dataList: filtersOptionList,
-                  value: (value) {},
+                BlocBuilder<GetWeighingListCubit, GetWeighingListState>(
+                  builder: (context, state) {
+                    String selectedFilterID = "1"; // Par défaut
+                    if (state is GetWeighingListSuccess) {
+                      selectedFilterID = state.currentFilterID;
+                    }
+                    return AppOptionSelector(
+                      dataList: filtersOptionList,
+                      selectedID: selectedFilterID,
+                      value: (filterID) {
+                        if (filterID == "4") {
+                          // Option "Autre" - Afficher le sélecteur de dates
+                          _showDateRangePicker(context);
+                        } else {
+                          // Appliquer le filtre directement
+                          context
+                              .read<GetWeighingListCubit>()
+                              .filterWeighings(filterID);
+                        }
+                      },
+                    );
+                  },
                 ),
                 const SizedBox(height: 16),
 
@@ -112,6 +131,40 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  /// Affiche un sélecteur de plage de dates personnalisée
+  Future<void> _showDateRangePicker(BuildContext context) async {
+    final DateTimeRange? pickedRange = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now(),
+      initialDateRange: DateTimeRange(
+        start: DateTime.now().subtract(const Duration(days: 30)),
+        end: DateTime.now(),
+      ),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: AppColors.green1,
+              onPrimary: AppColors.white,
+              surface: AppColors.white,
+              onSurface: AppColors.black,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (pickedRange != null && context.mounted) {
+      context.read<GetWeighingListCubit>().filterWeighings(
+            "4", // ID pour "Autre"
+            customStartDate: pickedRange.start,
+            customEndDate: pickedRange.end,
+          );
+    }
   }
 
   SizedBox _buildBanner() {

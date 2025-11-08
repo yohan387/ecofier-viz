@@ -17,11 +17,33 @@ final class GetWeighingListLoading extends GetWeighingListState {
 
 final class GetWeighingListSuccess extends GetWeighingListState {
   final List<Weighing> weighings;
+  final String currentFilterID;
+  final DateTime? customStartDate;
+  final DateTime? customEndDate;
 
-  const GetWeighingListSuccess(this.weighings);
+  const GetWeighingListSuccess(
+    this.weighings, {
+    this.currentFilterID = "1", // Par défaut: D'aujourd'hui
+    this.customStartDate,
+    this.customEndDate,
+  });
 
   @override
-  List<Object> get props => [weighings];
+  List<Object> get props => [weighings, currentFilterID];
+
+  GetWeighingListSuccess copyWith({
+    List<Weighing>? weighings,
+    String? currentFilterID,
+    DateTime? customStartDate,
+    DateTime? customEndDate,
+  }) {
+    return GetWeighingListSuccess(
+      weighings ?? this.weighings,
+      currentFilterID: currentFilterID ?? this.currentFilterID,
+      customStartDate: customStartDate ?? this.customStartDate,
+      customEndDate: customEndDate ?? this.customEndDate,
+    );
+  }
 }
 
 final class GetWeighingListFailure extends GetWeighingListState {
