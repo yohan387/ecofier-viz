@@ -11,6 +11,9 @@ class GetWeighingListCubit extends Cubit<GetWeighingListState> {
   final VizRepository _repository;
   List<Weighing> _allWeighings = [];
 
+  /// Getter pour accéder à toutes les pesées (pour l'export)
+  List<Weighing> get allWeighings => List.unmodifiable(_allWeighings);
+
   GetWeighingListCubit(this._repository)
       : super(const GetWeighingListInitial());
 

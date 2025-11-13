@@ -5,6 +5,7 @@ import 'package:ecofier_viz/presentation/authentication/state/login_cubit/login_
 import 'package:ecofier_viz/presentation/authentication/state/logout_cubit/logout_cubit.dart';
 import 'package:ecofier_viz/presentation/authentication/state/register_client/register_client_cubit.dart';
 import 'package:ecofier_viz/presentation/splash_screen.dart';
+import 'package:ecofier_viz/presentation/visualisation/states/export_weighings/export_weighings_cubit.dart';
 import 'package:ecofier_viz/presentation/visualisation/states/get_weighing_list/get_weighing_list_cubit.dart';
 import 'package:ecofier_viz/presentation/visualisation/states/get_weighing_summary/get_weighing_summary_cubit.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,7 @@ class MainApp extends StatelessWidget {
         BlocProvider(create: (context) => sl<LogoutCubit>()),
         BlocProvider(create: (context) => sl<GetWeighingListCubit>()),
         BlocProvider(create: (context) => sl<GetWeighingSummaryCubit>()),
+        BlocProvider(create: (context) => sl<ExportWeighingsCubit>()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

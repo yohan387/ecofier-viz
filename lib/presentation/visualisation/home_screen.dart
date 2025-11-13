@@ -2,13 +2,18 @@ import 'package:ecofier_viz/core/constants.dart';
 import 'package:ecofier_viz/models/user.dart';
 import 'package:ecofier_viz/presentation/authentication/screens/auth_screen.dart';
 import 'package:ecofier_viz/presentation/authentication/state/logout_cubit/logout_cubit.dart';
+import 'package:ecofier_viz/presentation/visualisation/states/export_weighings/export_weighings_cubit.dart';
 import 'package:ecofier_viz/presentation/visualisation/states/get_weighing_list/get_weighing_list_cubit.dart';
 import 'package:ecofier_viz/presentation/visualisation/states/get_weighing_summary/get_weighing_summary_cubit.dart';
 import 'package:ecofier_viz/presentation/visualisation/widgets/app_options_selector.dart';
+import 'package:ecofier_viz/presentation/visualisation/widgets/export_dialogs_helper.dart';
 import 'package:ecofier_viz/presentation/visualisation/widgets/weighing_list.dart';
 import 'package:ecofier_viz/presentation/visualisation/widgets/weighing_summary.dart';
+import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class HomeScreen extends StatefulWidget {
   final User user;
@@ -29,6 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawer: _buildEndDrawer(),
       body: RefreshIndicator(
         onRefresh: () async {
           context.read<GetWeighingListCubit>().getWeighingList();
@@ -66,6 +72,23 @@ class _HomeScreenState extends State<HomeScreen> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text(state.failure.userMessage)),
                   );
+                }
+              },
+            ),
+            BlocListener<ExportWeighingsCubit, ExportWeighingsState>(
+              listener: (context, state) {
+                if (state is ExportWeighingsLoading) {
+                  ExportDialogsHelper.showProgressDialog(context, state.progress);
+                } else if (state is ExportWeighingsSuccess) {
+                  Navigator.pop(context); // Fermer dialog progression
+                  ExportDialogsHelper.showPostExportDialog(context, state.filePath);
+                  context.read<ExportWeighingsCubit>().reset();
+                } else if (state is ExportWeighingsFailure) {
+                  if (Navigator.canPop(context)) {
+                    Navigator.pop(context); // Fermer dialog progression si ouvert
+                  }
+                  ExportDialogsHelper.showErrorSnackBar(context, state.errorMessage);
+                  context.read<ExportWeighingsCubit>().reset();
                 }
               },
             ),
@@ -114,7 +137,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 const WeighingSummary(),
 
-                const WeighingList(),
+                BlocBuilder<GetWeighingListCubit, GetWeighingListState>(
+                  builder: (context, state) {
+                    final totalCount = context.read<GetWeighingListCubit>().allWeighings.length;
+                    return WeighingList(totalWeighingsCount: totalCount);
+                  },
+                ),
 
                 const Center(
                   child: Text("By Ecofier",
@@ -164,6 +192,142 @@ class _HomeScreenState extends State<HomeScreen> {
             customStartDate: pickedRange.start,
             customEndDate: pickedRange.end,
           );
+    }
+  }
+
+  /// Construit le drawer latéral avec les options
+  Widget _buildEndDrawer() {
+    return Drawer(
+      child: SafeArea(
+        child: Column(
+          children: [
+            // En-tête du drawer
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(24),
+              decoration: const BoxDecoration(
+                color: AppColors.green1,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const CircleAvatar(
+                    radius: 32,
+                    backgroundColor: AppColors.white,
+                    child: Icon(
+                      Icons.person,
+                      size: 32,
+                      color: AppColors.green1,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    widget.user.fullName,
+                    style: const TextStyle(
+                      color: AppColors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    widget.user.email ?? widget.user.phoneNumber,
+                    style: const TextStyle(
+                      color: AppColors.white,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 8),
+            // Options
+            ListTile(
+              leading: const Icon(Icons.folder_open, color: AppColors.green1),
+              title: const Text("Accès au stockage"),
+              subtitle: const Text("Gérer les permissions"),
+              onTap: () async {
+                Navigator.pop(context); // Fermer le drawer
+                await _requestStoragePermission(context);
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.logout, color: AppColors.red),
+              title: const Text("Déconnexion"),
+              onTap: () {
+                Navigator.pop(context); // Fermer le drawer
+                context.read<LogoutCubit>().logout();
+              },
+            ),
+            const Spacer(),
+            // Footer
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                "Ecofier Viz v1.0.0",
+                style: TextStyle(
+                  color: AppColors.grey,
+                  fontSize: 12,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Demande la permission d'accès au stockage
+  Future<void> _requestStoragePermission(BuildContext context) async {
+    PermissionStatus status;
+
+    if (Platform.isAndroid) {
+      final androidInfo = await DeviceInfoPlugin().androidInfo;
+      if (androidInfo.version.sdkInt >= 33) {
+        // Android 13+ : Demander les permissions média
+        status = await Permission.photos.request();
+      } else {
+        // Android < 13 : Demander la permission de stockage
+        status = await Permission.storage.request();
+      }
+    } else {
+      // iOS
+      status = await Permission.photos.request();
+    }
+
+    if (!context.mounted) return;
+
+    if (status.isGranted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Accès au stockage accordé"),
+          backgroundColor: AppColors.green1,
+          duration: Duration(seconds: 2),
+        ),
+      );
+    } else if (status.isPermanentlyDenied) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text(
+              "Permission refusée de manière permanente. Veuillez l'activer dans les paramètres."),
+          backgroundColor: AppColors.red,
+          duration: const Duration(seconds: 4),
+          action: SnackBarAction(
+            label: "Paramètres",
+            textColor: AppColors.white,
+            onPressed: () => openAppSettings(),
+          ),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Accès au stockage refusé"),
+          backgroundColor: AppColors.red,
+          duration: Duration(seconds: 2),
+        ),
+      );
     }
   }
 
@@ -244,12 +408,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           onPressed: () {},
                           icon: const Icon(Icons.notifications),
                         ),
-                        IconButton(
-                          color: AppColors.white,
-                          onPressed: () {
-                            context.read<LogoutCubit>().logout();
-                          },
-                          icon: const Icon(Icons.logout),
+                        Builder(
+                          builder: (context) => IconButton(
+                            color: AppColors.white,
+                            onPressed: () {
+                              Scaffold.of(context).openEndDrawer();
+                            },
+                            icon: const Icon(Icons.menu),
+                          ),
                         ),
                       ],
                     ),
