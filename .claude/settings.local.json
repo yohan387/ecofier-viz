@@ -8,7 +8,12 @@
       "Bash(flutter pub get:*)",
       "Bash(./gradlew clean:*)",
       "Bash(./gradlew:*)",
-      "Bash(flutter analyze:*)"
+      "Bash(flutter analyze:*)",
+      "Bash(flutter doctor:*)",
+      "Bash(/Users/bonheurtam/fvm/versions/3.27.2/bin/flutter pub:*)",
+      "Bash(/Users/bonheurtam/flutter/flutter/bin/flutter --version:*)",
+      "Bash(/Users/bonheurtam/flutter/flutter/bin/flutter pub get:*)",
+      "Bash(/Users/bonheurtam/flutter/flutter/bin/flutter analyze:*)"
     ],
     "deny": [],
     "ask": []
