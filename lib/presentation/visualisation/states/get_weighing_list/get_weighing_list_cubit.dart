@@ -18,6 +18,18 @@ class GetWeighingListCubit extends Cubit<GetWeighingListState> {
       : super(const GetWeighingListInitial());
 
   Future<void> getWeighingList() async {
+    // Sauvegarder le filtre actuel avant le chargement
+    String currentFilterID = "1"; // Par défaut
+    DateTime? currentStartDate;
+    DateTime? currentEndDate;
+
+    if (state is GetWeighingListSuccess) {
+      final successState = state as GetWeighingListSuccess;
+      currentFilterID = successState.currentFilterID;
+      currentStartDate = successState.customStartDate;
+      currentEndDate = successState.customEndDate;
+    }
+
     emit(const GetWeighingListLoading());
     final result = await _repository.getWeighingList();
 
@@ -25,9 +37,19 @@ class GetWeighingListCubit extends Cubit<GetWeighingListState> {
       (failure) => emit(GetWeighingListFailure(failure)),
       (weighingList) {
         _allWeighings = weighingList;
-        // Par défaut, filtrer par "D'aujourd'hui" (ID = "1")
-        final filteredList = DateFilters.applyFilter("1", _allWeighings);
-        emit(GetWeighingListSuccess(filteredList, currentFilterID: "1"));
+        // Appliquer le filtre actuel (ou par défaut "1" si premier chargement)
+        final filteredList = DateFilters.applyFilter(
+          currentFilterID,
+          _allWeighings,
+          customStartDate: currentStartDate,
+          customEndDate: currentEndDate,
+        );
+        emit(GetWeighingListSuccess(
+          filteredList,
+          currentFilterID: currentFilterID,
+          customStartDate: currentStartDate,
+          customEndDate: currentEndDate,
+        ));
       },
     );
   }

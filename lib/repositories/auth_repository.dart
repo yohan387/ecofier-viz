@@ -15,7 +15,7 @@ class AuthRepository with RestApiMixin, RepositoriesMixin {
   final prefs = sl<SharedPreferences>();
 
   AuthRepository({required IConnectionChecker connectionChecker})
-      : _connectionChecker = connectionChecker;
+    : _connectionChecker = connectionChecker;
 
   ResultFuture<void> registerClient({
     required String firstname,
@@ -23,71 +23,58 @@ class AuthRepository with RestApiMixin, RepositoriesMixin {
     required String phoneNumber,
     required String password,
   }) async {
-    return executeWithConnectionCheck(
-      _connectionChecker,
-      () {
-        return sendRequest(
-          method: ApiMethod.post,
-          url: "$apiBaseUrl/register-client",
-          body: {
-            "nom": firstname,
-            "prenoms": lastname,
-            "telephone": phoneNumber,
-            "mot_de_passe_en_clair": password
-          },
-          responseHandler: (_) {
-            return;
-          },
-        );
-      },
-    );
+    return executeWithConnectionCheck(_connectionChecker, () {
+      return sendRequest(
+        method: ApiMethod.post,
+        url: "$apiBaseUrl/auth/register",
+        body: {"username": phoneNumber, "password": password, "company_id": 1},
+        responseHandler: (_) {
+          return;
+        },
+      );
+    });
   }
 
   ResultFuture<User> login(String phoneNumber, String password) async {
-    return executeWithConnectionCheck(
-      _connectionChecker,
-      () async {
-        final logedUser = await sendRequest(
-          method: ApiMethod.post,
-          url: "$apiBaseUrl/login-client",
-          body: {
-            "telephone": phoneNumber,
-            "mot_de_passe_en_clair": password,
-          },
-          responseHandler: (response) {
-            final jsonMap = json.decode(utf8.decode(response));
-            return User.fromMap(jsonMap);
-          },
-        );
+    return executeWithConnectionCheck(_connectionChecker, () async {
+      final logedUser = await sendRequest(
+        method: ApiMethod.post,
+        url: "$apiBaseUrl/auth/login",
+        body: {"username": phoneNumber, "password": password},
+        responseHandler: (response) {
+          final jsonMap = json.decode(utf8.decode(response));
+          // NestJS returns { access_token, user: { ... } }
+          final user = User.fromNestMap(jsonMap);
+          return user;
+        },
+      );
 
-        await prefs.setString('user', json.encode(logedUser.toMap()));
+      await prefs.setString('user', json.encode(logedUser.toMap()));
+      if (logedUser.accessToken != null) {
+        await prefs.setString('access_token', logedUser.accessToken!);
+      }
 
-        return logedUser;
-      },
-    );
+      return logedUser;
+    });
   }
 
   ResultFuture<User> getLocalUser() async {
-    return executeWithFailureHandling(
-      () async {
-        final userString = prefs.getString('user');
-        if (userString != null) {
-          final jsonMap = json.decode(userString);
-          return User.fromMap(jsonMap);
-        }
-        throw AppException.localStorage(
-          userMessage: "Utilisateur non trouvé.",
-          howToResolveError: "Veuillez vous connecter.",
-        );
-      },
-    );
+    return executeWithFailureHandling(() async {
+      final userString = prefs.getString('user');
+      if (userString != null) {
+        final jsonMap = json.decode(userString);
+        return User.fromMap(jsonMap);
+      }
+      throw AppException.localStorage(
+        userMessage: "Utilisateur non trouvé.",
+        howToResolveError: "Veuillez vous connecter.",
+      );
+    });
   }
 
   ResultFuture<void> logout() async {
-    return executeWithFailureHandling(
-      () async {
-        await prefs.remove('user');
-      },
-    );
+    return executeWithFailureHandling(() async {
+      await prefs.remove('user');
+    });
   }
 }

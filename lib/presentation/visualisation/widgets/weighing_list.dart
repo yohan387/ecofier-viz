@@ -1,18 +1,40 @@
 import 'package:ecofier_viz/core/constants.dart';
-import 'package:ecofier_viz/presentation/visualisation/states/export_weighings/export_weighings_cubit.dart';
 import 'package:ecofier_viz/presentation/visualisation/states/get_weighing_list/get_weighing_list_cubit.dart';
-import 'package:ecofier_viz/presentation/visualisation/widgets/export_dialogs_helper.dart';
+import 'package:ecofier_viz/presentation/visualisation/widgets/shimmer_widgets.dart';
 import 'package:ecofier_viz/presentation/visualisation/widgets/weighing_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class WeighingList extends StatelessWidget {
   final int totalWeighingsCount;
 
-  const WeighingList({
-    super.key,
-    required this.totalWeighingsCount,
-  });
+  const WeighingList({super.key, required this.totalWeighingsCount});
+
+  /// Génère le message d'absence de pesées selon le filtre actuel
+  String _getEmptyMessage(
+    String filterID,
+    DateTime? startDate,
+    DateTime? endDate,
+  ) {
+    switch (filterID) {
+      case "1":
+        return "Aucune pesée aujourd'hui";
+      case "2":
+        return "Aucune pesée cette semaine";
+      case "3":
+        return "Aucune pesée ce mois";
+      case "4":
+        if (startDate != null && endDate != null) {
+          final formattedStart = DateFormat('dd/MM/yyyy').format(startDate);
+          final formattedEnd = DateFormat('dd/MM/yyyy').format(endDate);
+          return "Aucune pesée pour la période du $formattedStart au $formattedEnd";
+        }
+        return "Aucune pesée pour la période sélectionnée";
+      default:
+        return "Aucune pesée disponible";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,62 +43,20 @@ class WeighingList extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header with title and export button
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  "Historique",
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: AppColors.green2,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                ElevatedButton.icon(
-                  onPressed: () => _handleExportClick(context),
-                  icon: const Icon(Icons.file_download, size: 18),
-                  label: const Text("Exporter"),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.green1,
-                    foregroundColor: AppColors.white,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  ),
-                ),
-              ],
+          // Header with title
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              "Historique",
+              style: TextStyle(
+                fontSize: 18, // Increased from 14 to 18 for better hierarchy
+                color: AppColors.green2,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           const SizedBox(height: 8),
           _builWeighingList(),
-          const SizedBox(height: 16),
-          Center(
-            child: Container(
-              width: 164,
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 227, 236, 227),
-                  borderRadius: BorderRadius.circular(16)),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Center(
-                    child: Text(
-                      "Rechercher",
-                      style: TextStyle(color: AppColors.green1),
-                    ),
-                  ),
-                  SizedBox(width: 8),
-                  Icon(
-                    Icons.zoom_in,
-                    color: AppColors.green1,
-                  )
-                ],
-              ),
-            ),
-          ),
           const SizedBox(height: 64),
         ],
       ),
@@ -87,9 +67,30 @@ class WeighingList extends StatelessWidget {
     return BlocBuilder<GetWeighingListCubit, GetWeighingListState>(
       builder: (context, state) {
         if (state is GetWeighingListLoading) {
-          return const Center(child: CircularProgressIndicator());
+          return const WeighingListShimmer();
         } else if (state is GetWeighingListSuccess) {
           final weighings = state.weighings;
+
+          // Si la liste est vide, afficher le message personnalisé
+          if (weighings.isEmpty) {
+            return Container(
+              padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 24),
+              child: Text(
+                _getEmptyMessage(
+                  state.currentFilterID,
+                  state.customStartDate,
+                  state.customEndDate,
+                ),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: AppColors.grey.withValues(alpha: 0.7),
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            );
+          }
+
           return ListView.builder(
             padding: const EdgeInsets.all(0),
             itemCount: weighings.length,
@@ -101,26 +102,32 @@ class WeighingList extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => WeighingDetailPage(
-                        weighing: weighings[index],
-                      ),
+                      builder: (context) =>
+                          WeighingDetailPage(weighing: weighings[index]),
                     ),
                   );
                 },
                 title: Container(
                   padding: const EdgeInsets.all(4),
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 4, horizontal: 0),
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 4,
+                    horizontal: 0,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.white,
                     borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        weighings[index].codePesee,
-                      ),
+                      Text(weighings[index].codePesee),
                       Text(
                         "${weighings[index].poidsNet?.toStringAsFixed(2) ?? 'N/A'} kg",
                         style: const TextStyle(fontWeight: FontWeight.bold),
@@ -135,50 +142,5 @@ class WeighingList extends StatelessWidget {
         return const SizedBox.shrink();
       },
     );
-  }
-
-  /// Gère le clic sur le bouton d'export
-  Future<void> _handleExportClick(BuildContext context) async {
-    final weighingListState = context.read<GetWeighingListCubit>().state;
-
-    if (weighingListState is! GetWeighingListSuccess) {
-      ExportDialogsHelper.showErrorSnackBar(
-        context,
-        "Aucune pesée à exporter",
-      );
-      return;
-    }
-
-    final filteredWeighings = weighingListState.weighings;
-
-    // Step 1: Choisir le scope (filtre actuel vs tout)
-    final scope = await ExportDialogsHelper.showExportScopeDialog(
-      context,
-      filteredCount: filteredWeighings.length,
-      totalCount: totalWeighingsCount,
-    );
-
-    if (scope == null) return; // Annulé
-
-    if (!context.mounted) return;
-
-    // Step 2: Sélectionner les colonnes
-    final selectedColumns =
-        await ExportDialogsHelper.showColumnSelectionDialog(context);
-
-    if (selectedColumns == null || selectedColumns.isEmpty) return; // Annulé
-
-    if (!context.mounted) return;
-
-    // Step 3: Déterminer quelles pesées exporter
-    final weighingsToExport = scope == ExportScope.all
-        ? context.read<GetWeighingListCubit>().allWeighings
-        : filteredWeighings;
-
-    // Step 4: Lancer l'export avec BlocListener
-    context.read<ExportWeighingsCubit>().exportWeighings(
-          weighings: weighingsToExport,
-          selectedColumns: selectedColumns,
-        );
   }
 }

@@ -20,7 +20,7 @@ class VizRepository with RepositoriesMixin, RestApiMixin {
   final _weighings = <Weighing>[];
 
   VizRepository({required IConnectionChecker connectionChecker})
-      : _connectionChecker = connectionChecker;
+    : _connectionChecker = connectionChecker;
 
   ResultFuture<List<Weighing>> getWeighingList() async {
     return executeWithConnectionCheck(_connectionChecker, () async {
@@ -38,7 +38,7 @@ class VizRepository with RepositoriesMixin, RestApiMixin {
 
       return sendRequest(
         method: ApiMethod.get,
-        url: "$apiBaseUrl/pesees/client/$clientId",
+        url: "$apiBaseUrl/weighings",
         responseHandler: (response) {
           final data = json.decode(utf8.decode(response));
           final fetchedWeighings = Weighing.fromMapList(data);
@@ -53,14 +53,18 @@ class VizRepository with RepositoriesMixin, RestApiMixin {
   }
 
   ResultFuture<WeighingSummary> getWeighingSummary() async {
-    return Right(WeighingSummary(
-      totalWeight: _weighings.fold(0, (sum, w) => sum + (w.poidsNet ?? 0)),
-      totalEarned: _weighings.fold(
-          0, (sum, w) => sum + getTotalEarned(w.prixProduit, w.poidsNet)),
-      totalAnomalies: _weighings.fold(0, (sum, w) => sum + (0)),
-      totalItems: _weighings.length,
-      lastUpdated: DateTime.now(),
-    ));
+    return Right(
+      WeighingSummary(
+        totalWeight: _weighings.fold(0, (sum, w) => sum + (w.poidsNet ?? 0)),
+        totalEarned: _weighings.fold(
+          0,
+          (sum, w) => sum + getTotalEarned(w.prixProduit, w.poidsNet),
+        ),
+        totalAnomalies: _weighings.fold(0, (sum, w) => sum + (0)),
+        totalItems: _weighings.length,
+        lastUpdated: DateTime.now(),
+      ),
+    );
   }
 
   double getTotalEarned(double? prixParKilo, double? tolaPoidsNet) {

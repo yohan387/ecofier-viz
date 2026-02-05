@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 enum ApiMethod { get, post, put, delete, unknown }
 
-const String apiBaseUrl = "https://ecofier-backend.onrender.com";
+const String apiBaseUrl = "http://localhost:3000";
 
 class AppColors {
   static const Color black = Colors.black;
@@ -16,6 +16,7 @@ class AppColors {
   static const Color grey3 = Color(0xFFDDE1EF);
   static const Color grey4 = Color(0xFFF1F3FA);
   static const Color red = Color(0xFFE7140C);
+  static const Color yellow = Color(0xFFD4E157);
   static const Color transparent = Colors.transparent;
 }
 
@@ -37,35 +38,13 @@ class AppErrorStatusCode {
 }
 
 /// Types de Failure possibles
-enum FailureType {
-  api,
-  localStorage,
-  internal,
-  network,
-}
+enum FailureType { api, localStorage, internal, network }
 
-enum AppExceptionType {
-  api,
-  localStorage,
-  network,
-  internal,
-}
+enum AppExceptionType { api, localStorage, network, internal }
 
 const filtersOptionList = [
-  {
-    "id": "1",
-    "code": "D'aujourd'hui",
-  },
-  {
-    "id": "2",
-    "code": "De la semaine",
-  },
-  {
-    "id": "3",
-    "code": "Du mois",
-  },
-  {
-    "id": "4",
-    "code": "Autre",
-  },
+  {"id": "1", "code": "D'aujourd'hui"},
+  {"id": "2", "code": "De la semaine"},
+  {"id": "3", "code": "Du mois"},
+  {"id": "4", "code": "Autre"},
 ];

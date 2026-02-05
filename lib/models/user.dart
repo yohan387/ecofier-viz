@@ -19,6 +19,18 @@ class User extends Equatable {
     this.accessToken,
   });
 
+  factory User.fromNestMap(Map<String, dynamic> json) {
+    final userData = json['user'];
+    return User(
+      id: userData['id'].toString(),
+      firstName:
+          userData['username'], // NestJS n'a pas forcément de nom/prénom séparé par défaut
+      lastName: '',
+      phoneNumber: userData['username'],
+      accessToken: json['access_token'],
+    );
+  }
+
   factory User.fromMap(Map<String, dynamic> json) {
     return User(
       id: json['data']['id'],
@@ -48,6 +60,12 @@ class User extends Equatable {
   }
 
   @override
-  List<Object?> get props =>
-      [id, firstName, lastName, phoneNumber, password, email];
+  List<Object?> get props => [
+    id,
+    firstName,
+    lastName,
+    phoneNumber,
+    password,
+    email,
+  ];
 }

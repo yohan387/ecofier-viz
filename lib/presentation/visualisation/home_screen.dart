@@ -1,7 +1,7 @@
 import 'package:ecofier_viz/core/constants.dart';
 import 'package:ecofier_viz/models/user.dart';
-import 'package:ecofier_viz/presentation/authentication/screens/auth_screen.dart';
-import 'package:ecofier_viz/presentation/authentication/state/logout_cubit/logout_cubit.dart';
+import 'package:ecofier_viz/presentation/visualisation/analytics_screen.dart';
+import 'package:ecofier_viz/presentation/visualisation/settings_screen.dart';
 import 'package:ecofier_viz/presentation/visualisation/states/export_weighings/export_weighings_cubit.dart';
 import 'package:ecofier_viz/presentation/visualisation/states/get_weighing_list/get_weighing_list_cubit.dart';
 import 'package:ecofier_viz/presentation/visualisation/states/get_weighing_summary/get_weighing_summary_cubit.dart';
@@ -9,11 +9,8 @@ import 'package:ecofier_viz/presentation/visualisation/widgets/app_options_selec
 import 'package:ecofier_viz/presentation/visualisation/widgets/export_dialogs_helper.dart';
 import 'package:ecofier_viz/presentation/visualisation/widgets/weighing_list.dart';
 import 'package:ecofier_viz/presentation/visualisation/widgets/weighing_summary.dart';
-import 'dart:io';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class HomeScreen extends StatefulWidget {
   final User user;
@@ -24,6 +21,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int _currentIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -34,7 +33,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      endDrawer: _buildEndDrawer(),
+      extendBody: true,
+      bottomNavigationBar: _buildFloatingBottomNav(),
       body: RefreshIndicator(
         onRefresh: () async {
           context.read<GetWeighingListCubit>().getWeighingList();
@@ -61,99 +61,95 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
               },
             ),
-            BlocListener<LogoutCubit, LogoutState>(
-              listener: (context, state) {
-                if (state is LogoutSuccess) {
-                  Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) => const AuthScreen()),
-                    (Route<dynamic> route) => false,
-                  );
-                } else if (state is LogoutFailure) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.failure.userMessage)),
-                  );
-                }
-              },
-            ),
             BlocListener<ExportWeighingsCubit, ExportWeighingsState>(
               listener: (context, state) {
                 if (state is ExportWeighingsLoading) {
-                  ExportDialogsHelper.showProgressDialog(context, state.progress);
+                  ExportDialogsHelper.showProgressDialog(
+                    context,
+                    state.progress,
+                  );
                 } else if (state is ExportWeighingsSuccess) {
                   Navigator.pop(context); // Fermer dialog progression
-                  ExportDialogsHelper.showPostExportDialog(context, state.filePath);
+                  ExportDialogsHelper.showPostExportDialog(
+                    context,
+                    state.filePath,
+                  );
                   context.read<ExportWeighingsCubit>().reset();
                 } else if (state is ExportWeighingsFailure) {
                   if (Navigator.canPop(context)) {
-                    Navigator.pop(context); // Fermer dialog progression si ouvert
+                    Navigator.pop(
+                      context,
+                    ); // Fermer dialog progression si ouvert
                   }
-                  ExportDialogsHelper.showErrorSnackBar(context, state.errorMessage);
+                  ExportDialogsHelper.showErrorSnackBar(
+                    context,
+                    state.errorMessage,
+                  );
                   context.read<ExportWeighingsCubit>().reset();
                 }
               },
             ),
           ],
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Bannière image
-                _buildBanner(),
-                const Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Text(
-                    "Pesées",
-                    style: TextStyle(
-                      fontSize: 24,
-                      color: AppColors.green2,
-                      fontWeight: FontWeight.bold,
+          child: RefreshIndicator(
+            onRefresh: () async {
+              context.read<GetWeighingListCubit>().getWeighingList();
+            },
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Bannière image
+                  _buildBanner(),
+                  const Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Text(
+                      "Pesées",
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: AppColors.green2,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-                BlocBuilder<GetWeighingListCubit, GetWeighingListState>(
-                  builder: (context, state) {
-                    String selectedFilterID = "1"; // Par défaut
-                    if (state is GetWeighingListSuccess) {
-                      selectedFilterID = state.currentFilterID;
-                    }
-                    return AppOptionSelector(
-                      dataList: filtersOptionList,
-                      selectedID: selectedFilterID,
-                      value: (filterID) {
-                        if (filterID == "4") {
-                          // Option "Autre" - Afficher le sélecteur de dates
-                          _showDateRangePicker(context);
-                        } else {
-                          // Appliquer le filtre directement
-                          context
-                              .read<GetWeighingListCubit>()
-                              .filterWeighings(filterID);
-                        }
-                      },
-                    );
-                  },
-                ),
-                const SizedBox(height: 16),
+                  BlocBuilder<GetWeighingListCubit, GetWeighingListState>(
+                    builder: (context, state) {
+                      String selectedFilterID = "1"; // Par défaut
+                      if (state is GetWeighingListSuccess) {
+                        selectedFilterID = state.currentFilterID;
+                      }
+                      return AppOptionSelector(
+                        dataList: filtersOptionList,
+                        selectedID: selectedFilterID,
+                        value: (filterID) {
+                          if (filterID == "4") {
+                            // Option "Autre" - Afficher le sélecteur de dates
+                            _showDateRangePicker(context);
+                          } else {
+                            // Appliquer le filtre directement
+                            context
+                                .read<GetWeighingListCubit>()
+                                .filterWeighings(filterID);
+                          }
+                        },
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 16),
 
-                const WeighingSummary(),
+                  const WeighingSummary(),
 
-                BlocBuilder<GetWeighingListCubit, GetWeighingListState>(
-                  builder: (context, state) {
-                    final totalCount = context.read<GetWeighingListCubit>().allWeighings.length;
-                    return WeighingList(totalWeighingsCount: totalCount);
-                  },
-                ),
-
-                const Center(
-                  child: Text("By Ecofier",
-                      style: TextStyle(
-                        color: AppColors.green1,
-                        fontStyle: FontStyle.italic,
-                      )),
-                ),
-
-                const SizedBox(height: 32),
-              ],
+                  BlocBuilder<GetWeighingListCubit, GetWeighingListState>(
+                    builder: (context, state) {
+                      final totalCount = context
+                          .read<GetWeighingListCubit>()
+                          .allWeighings
+                          .length;
+                      return WeighingList(totalWeighingsCount: totalCount);
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -188,88 +184,105 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (pickedRange != null && context.mounted) {
       context.read<GetWeighingListCubit>().filterWeighings(
-            "4", // ID pour "Autre"
-            customStartDate: pickedRange.start,
-            customEndDate: pickedRange.end,
-          );
+        "4", // ID pour "Autre"
+        customStartDate: pickedRange.start,
+        customEndDate: pickedRange.end,
+      );
     }
   }
 
-  /// Construit le drawer latéral avec les options
-  Widget _buildEndDrawer() {
-    return Drawer(
-      child: SafeArea(
+  /// Construit la bottom navigation bar flottante
+  Widget _buildFloatingBottomNav() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+      decoration: BoxDecoration(
+        color: AppColors.green1,
+        borderRadius: BorderRadius.circular(
+          32,
+        ), // Corrected from 30 to 32 (Multiple of 8)
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.green1.withValues(alpha: 0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _buildNavItem(
+            icon: Icons.home_rounded,
+            label: 'Accueil',
+            index: 0,
+            isSelected: _currentIndex == 0,
+          ),
+          _buildNavItem(
+            icon: Icons.analytics_rounded,
+            label: 'Analyses',
+            index: 1,
+            isSelected: _currentIndex == 1,
+          ),
+          _buildNavItem(
+            icon: Icons.settings_rounded,
+            label: 'Paramètres',
+            index: 2,
+            isSelected: _currentIndex == 2,
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Construit un élément de navigation
+  Widget _buildNavItem({
+    required IconData icon,
+    required String label,
+    required int index,
+    required bool isSelected,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        if (index == 1) {
+          // Navigation vers la page d'analyses
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AnalyticsScreen(user: widget.user),
+            ),
+          );
+        } else if (index == 2) {
+          // Navigation vers la page des paramètres
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SettingsScreen(user: widget.user),
+            ),
+          );
+        } else {
+          setState(() {
+            _currentIndex = index;
+          });
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            // En-tête du drawer
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(24),
-              decoration: const BoxDecoration(
-                color: AppColors.green1,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const CircleAvatar(
-                    radius: 32,
-                    backgroundColor: AppColors.white,
-                    child: Icon(
-                      Icons.person,
-                      size: 32,
-                      color: AppColors.green1,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    widget.user.fullName,
-                    style: const TextStyle(
-                      color: AppColors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    widget.user.email ?? widget.user.phoneNumber,
-                    style: const TextStyle(
-                      color: AppColors.white,
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
+            Icon(
+              icon,
+              color: isSelected ? AppColors.yellow : AppColors.white,
+              size: 24,
             ),
-            const SizedBox(height: 8),
-            // Options
-            ListTile(
-              leading: const Icon(Icons.folder_open, color: AppColors.green1),
-              title: const Text("Accès au stockage"),
-              subtitle: const Text("Gérer les permissions"),
-              onTap: () async {
-                Navigator.pop(context); // Fermer le drawer
-                await _requestStoragePermission(context);
-              },
-            ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.logout, color: AppColors.red),
-              title: const Text("Déconnexion"),
-              onTap: () {
-                Navigator.pop(context); // Fermer le drawer
-                context.read<LogoutCubit>().logout();
-              },
-            ),
-            const Spacer(),
-            // Footer
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text(
-                "Ecofier Viz v1.0.0",
-                style: TextStyle(
-                  color: AppColors.grey,
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                ),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                color: isSelected ? AppColors.yellow : AppColors.white,
+                fontSize: 12,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
               ),
             ),
           ],
@@ -278,99 +291,28 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// Demande la permission d'accès au stockage
-  Future<void> _requestStoragePermission(BuildContext context) async {
-    PermissionStatus status;
-
-    if (Platform.isAndroid) {
-      final androidInfo = await DeviceInfoPlugin().androidInfo;
-      if (androidInfo.version.sdkInt >= 33) {
-        // Android 13+ : Demander les permissions média
-        status = await Permission.photos.request();
-      } else {
-        // Android < 13 : Demander la permission de stockage
-        status = await Permission.storage.request();
-      }
-    } else {
-      // iOS
-      status = await Permission.photos.request();
-    }
-
-    if (!context.mounted) return;
-
-    if (status.isGranted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Accès au stockage accordé"),
-          backgroundColor: AppColors.green1,
-          duration: Duration(seconds: 2),
-        ),
-      );
-    } else if (status.isPermanentlyDenied) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text(
-              "Permission refusée de manière permanente. Veuillez l'activer dans les paramètres."),
-          backgroundColor: AppColors.red,
-          duration: const Duration(seconds: 4),
-          action: SnackBarAction(
-            label: "Paramètres",
-            textColor: AppColors.white,
-            onPressed: () => openAppSettings(),
-          ),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Accès au stockage refusé"),
-          backgroundColor: AppColors.red,
-          duration: Duration(seconds: 2),
-        ),
-      );
-    }
-  }
-
   SizedBox _buildBanner() {
     return SizedBox(
-      height: 216,
+      height: 180,
       child: Stack(
         children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(64),
-            ),
-            child: Image.asset(
-              'lib/core/assets/bg_1.jpeg',
-              fit: BoxFit.cover,
-              height: 192,
-              width: double.infinity,
-              errorBuilder: (context, error, stackTrace) => Container(
-                color: Colors.grey[300],
-                child: const Center(child: Icon(Icons.image, size: 80)),
+          // Fond avec dégradé au lieu de l'image
+          Container(
+            height: 180,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [AppColors.green1, AppColors.green2],
               ),
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            left: 16,
-            child: Container(
-              width: 72,
-              height: 72,
-              decoration: BoxDecoration(
-                color: AppColors.white,
-                border: Border.all(color: AppColors.green1),
-                borderRadius: BorderRadius.circular(38),
-              ),
-              child: const Icon(
-                Icons.person,
-                color: AppColors.green1,
-                size: 32,
-              ),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(56),
+              ), // Corrected from 54 to 56 (Multiple of 8)
             ),
           ),
+
           Positioned(
-            top: 24,
+            top: 32,
             left: 0,
             right: 0,
             child: SafeArea(
@@ -378,7 +320,29 @@ class _HomeScreenState extends State<HomeScreen> {
                 margin: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  spacing: 8,
                   children: [
+                    Container(
+                      width: 72,
+                      height: 72,
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        border: Border.all(color: AppColors.white, width: 3),
+                        borderRadius: BorderRadius.circular(38),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.1),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: const Icon(
+                        Icons.person,
+                        color: AppColors.green1,
+                        size: 32,
+                      ),
+                    ),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -400,24 +364,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ],
                       ),
-                    ),
-                    Row(
-                      children: [
-                        IconButton(
-                          color: AppColors.white,
-                          onPressed: () {},
-                          icon: const Icon(Icons.notifications),
-                        ),
-                        Builder(
-                          builder: (context) => IconButton(
-                            color: AppColors.white,
-                            onPressed: () {
-                              Scaffold.of(context).openEndDrawer();
-                            },
-                            icon: const Icon(Icons.menu),
-                          ),
-                        ),
-                      ],
                     ),
                   ],
                 ),

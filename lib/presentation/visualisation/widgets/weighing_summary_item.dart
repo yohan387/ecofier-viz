@@ -23,15 +23,15 @@ class _WeighingSummaryItemState extends State<WeighingSummaryItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(8),
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+      padding: const EdgeInsets.all(6),
+      margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
             color: const Color.fromARGB(255, 234, 240, 235).withOpacity(0.5),
-            spreadRadius: 5,
+            spreadRadius: 1,
             blurRadius: 7,
             offset: const Offset(0, 3),
           ),
@@ -43,11 +43,13 @@ class _WeighingSummaryItemState extends State<WeighingSummaryItem> {
           Column(
             children: [
               widget.icon,
-              const SizedBox(width: 8),
+              const SizedBox(height: 4),
               Text(
                 widget.title,
-                style:
-                    const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
@@ -66,12 +68,11 @@ class _WeighingSummaryItemState extends State<WeighingSummaryItem> {
                       ? const Text(
                           "••••••••",
                           style: TextStyle(
-                              color: AppColors.green1,
-                              fontWeight: FontWeight.bold),
+                            color: AppColors.green1,
+                            fontWeight: FontWeight.bold,
+                          ),
                         )
-                      : Expanded(
-                          child: widget.value,
-                        ),
+                      : Expanded(child: widget.value),
                   GestureDetector(
                     onTap: () {
                       HapticFeedback.lightImpact();
@@ -80,7 +81,7 @@ class _WeighingSummaryItemState extends State<WeighingSummaryItem> {
                       });
                     },
                     child: _hideValue ? AppIcons.closedEye : AppIcons.openedEye,
-                  )
+                  ),
                 ],
               ),
             ),

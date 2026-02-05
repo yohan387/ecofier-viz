@@ -56,38 +56,56 @@ class Weighing extends Equatable {
 
   factory Weighing._fromMap(Map<String, dynamic> map) {
     return Weighing(
-      codePesee: map['code_pesee'] ?? '',
-      datePesee1: map['date_pesee_1'] != null
-          ? DateTime.tryParse(map['date_pesee_1'])
-          : null,
-      datePesee2: map['date_pesee_2'] != null
-          ? DateTime.tryParse(map['date_pesee_2'])
-          : null,
-      poids1: (map['poids_1'] as num?)?.toDouble(),
-      poids2: (map['poids_2'] as num?)?.toDouble(),
-      heurePesee1: map['heure_pesee_1'] != null
-          ? DateTime.tryParse(map['heure_pesee_1'])
-          : null,
-      heurePesee2: map['heure_pesee_2'] != null
-          ? DateTime.tryParse(map['heure_pesee_2'])
-          : null,
-      poidsNet: (map['poids_net'] as num?)?.toDouble(),
+      codePesee: map['weighing_code'] ?? map['code_pesee'] ?? '',
+      datePesee1: map['weighing_date_1'] != null
+          ? DateTime.tryParse(map['weighing_date_1'])
+          : (map['date_pesee_1'] != null
+                ? DateTime.tryParse(map['date_pesee_1'])
+                : null),
+      datePesee2: map['weighing_date_2'] != null
+          ? DateTime.tryParse(map['weighing_date_2'])
+          : (map['date_pesee_2'] != null
+                ? DateTime.tryParse(map['date_pesee_2'])
+                : null),
+      poids1:
+          (map['weight_1'] as num?)?.toDouble() ??
+          (map['poids_1'] as num?)?.toDouble(),
+      poids2:
+          (map['weight_2'] as num?)?.toDouble() ??
+          (map['poids_2'] as num?)?.toDouble(),
+      heurePesee1: map['weighing_date_1'] != null
+          ? DateTime.tryParse(map['weighing_date_1'])
+          : (map['heure_pesee_1'] != null
+                ? DateTime.tryParse(map['heure_pesee_1'])
+                : null),
+      heurePesee2: map['weighing_date_2'] != null
+          ? DateTime.tryParse(map['weighing_date_2'])
+          : (map['heure_pesee_2'] != null
+                ? DateTime.tryParse(map['heure_pesee_2'])
+                : null),
+      poidsNet:
+          (map['net_weight'] as num?)?.toDouble() ??
+          (map['poids_net'] as num?)?.toDouble(),
       refraction: (map['refraction'] as num?)?.toDouble(),
-      poidsRefracte: (map['poids_refracte'] as num?)?.toDouble(),
-      mouvement: map['mouvement'],
-      provenance: map['provenance'],
-      client: map['client'],
+      poidsRefracte:
+          (map['refracted_weight'] as num?)?.toDouble() ??
+          (map['poids_refracte'] as num?)?.toDouble(),
+      mouvement: map['mouvement'] ?? map['origin'],
+      provenance: map['provenance'] ?? map['origin'],
+      client: map['client'] ?? map['farmer']?['name'],
       representant: map['representant'],
-      transporteur: map['transporteur'],
-      contenantPesee: map['contenant_pesee'],
-      immatriculation: map['immatriculation'],
-      produit: map['produit'],
-      prixProduit: (map['prix_produit'] as num?)?.toDouble(),
-      statutPesee: map['statut_pesee'],
+      transporteur: map['transporteur'] ?? map['transporter'],
+      contenantPesee: map['contenant_pesee'] ?? map['container_id']?.toString(),
+      immatriculation: map['immatriculation'] ?? map['license_plate'],
+      produit: map['produit'] ?? map['product']?['name'],
+      prixProduit:
+          (map['product']?['unit_price'] as num?)?.toDouble() ??
+          (map['prix_produit'] as num?)?.toDouble(),
+      statutPesee: map['status'] ?? map['statut_pesee'],
       motifAnnulation: map['motif_annulation'],
       referencePiece: map['reference_piece'],
-      clientId: map['client_id'] ?? '',
-      utilisateurId: map['utilisateur_id'] ?? '',
+      clientId: (map['farmer_id'] ?? map['client_id'] ?? '').toString(),
+      utilisateurId: (map['user_id'] ?? map['utilisateur_id'] ?? '').toString(),
     );
   }
 
@@ -100,31 +118,31 @@ class Weighing extends Equatable {
 
   @override
   List<Object?> get props => [
-        codePesee,
-        datePesee1,
-        datePesee2,
-        poids1,
-        poids2,
-        heurePesee1,
-        heurePesee2,
-        poidsNet,
-        refraction,
-        poidsRefracte,
-        mouvement,
-        provenance,
-        client,
-        representant,
-        transporteur,
-        contenantPesee,
-        immatriculation,
-        produit,
-        prixProduit,
-        statutPesee,
-        motifAnnulation,
-        referencePiece,
-        clientId,
-        utilisateurId,
-      ];
+    codePesee,
+    datePesee1,
+    datePesee2,
+    poids1,
+    poids2,
+    heurePesee1,
+    heurePesee2,
+    poidsNet,
+    refraction,
+    poidsRefracte,
+    mouvement,
+    provenance,
+    client,
+    representant,
+    transporteur,
+    contenantPesee,
+    immatriculation,
+    produit,
+    prixProduit,
+    statutPesee,
+    motifAnnulation,
+    referencePiece,
+    clientId,
+    utilisateurId,
+  ];
 
   Weighing copyWith({
     String? codePesee,
