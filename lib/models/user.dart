@@ -23,9 +23,8 @@ class User extends Equatable {
     final userData = json['user'];
     return User(
       id: userData['id'].toString(),
-      firstName:
-          userData['username'], // NestJS n'a pas forcément de nom/prénom séparé par défaut
-      lastName: '',
+      firstName: userData['first_name'] ?? userData['username'],
+      lastName: userData['last_name'] ?? '',
       phoneNumber: userData['username'],
       accessToken: json['access_token'],
     );
